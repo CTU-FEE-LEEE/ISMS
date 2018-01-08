@@ -1,0 +1,22 @@
+{
+	"logging": [
+		{
+			"file_name": "/home/odroid/bolidozor/radio-observer.log",
+			"log_level": "debug",
+		},
+	],
+
+    "project": "geozor",
+    "project_home_folder": "/home/odroid/geozor/station/",
+    "storage_hostname": "space.astro.cz",
+    "storage_username": "kaklik",
+    "storage_stationpath": "/storage/geozor/",
+
+    "raw_sample_interval": 5,
+    "data_path":  "./station/data/", // path to measured data directory
+    "data_archive":  "/home/odroid/geozor/station/data_archive/", // path to raw data archive directory
+    "data_upload":  "/home/odroid/geozor/station/data_upload/", // path to data ready for upload
+    "origin": "VRTY-S2",      // name of detection station
+}
+
+

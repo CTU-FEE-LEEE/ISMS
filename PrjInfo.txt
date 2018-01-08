@@ -1,0 +1,15 @@
+﻿[InfoShortDescription.en]
+Industrial Sensors Measurement System
+
+[InfoShortDescription.cs]
+Měřící systém pro průmyslové senzory
+
+[InfoLongDescription.en]
+This device can be used for connecting a standard current-loop or analog-voltage output industrial sensors. The instrument contains a computer which digitalizes the measured data and allows transmision over Ethernet interface.
+
+[InfoLongDescription.cs]
+Zařízení může být využito pro připojení standardních průmyslových čidel s analogovým napěťovým výstupem, nebo proudovou smyčkou. Konstrukce obsahuje počítač, který digitalizuje měřená data a umožňuje jejich přenos přes Ethernet rozhraní.
+
+[InfoBuyUST]
+
+[End]
