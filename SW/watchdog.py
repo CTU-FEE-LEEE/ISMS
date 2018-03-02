@@ -135,7 +135,7 @@ def main():
             writeLog(msg)
             print msg
 
-        if errCntConn > errCnt:
+        if errCntConn >= errCnt:
             reboot("Connection test error - exceed boundaries")
             break
 
@@ -150,7 +150,7 @@ def main():
             writeLog(msg)
             print msg
 
-        if errCntFolder > errCnt:
+        if errCntFolder >= errCnt:
             reboot("Folder size test error - exceed boundaries")
             break
 
