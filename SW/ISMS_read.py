@@ -129,7 +129,7 @@ while True:
         f.close()
         sys.exit(0)
     except Exception as e:
-        sys.stdout.write(e)
+        print(e)
         time.sleep(5)
 
 
