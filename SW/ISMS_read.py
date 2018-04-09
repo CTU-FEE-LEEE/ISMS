@@ -17,7 +17,7 @@ parser = ejson.Parser()
 
 #### Functions ###############################################
 def modBusInit():
-    instrument = minimalmodbus.Instrument('COM1', 1) # port name, slave address (in decimal)
+    instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1) # port name, slave address (in decimal)
 
     instrument.serial.port          # this is the serial port name
     instrument.serial.baudrate = 9600   # Baud
