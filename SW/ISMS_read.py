@@ -15,6 +15,19 @@ from mlabutils import ejson
 
 parser = ejson.Parser()
 
+#### Functions ###############################################
+def modBusInit():
+    instrument = minimalmodbus.Instrument('COM1', 1) # port name, slave address (in decimal)
+
+    instrument.serial.port          # this is the serial port name
+    instrument.serial.baudrate = 9600   # Baud
+    instrument.serial.bytesize = 8
+    instrument.serial.stopbits = 2
+    instrument.serial.timeout  = 0.5   # seconds
+
+    instrument.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
+    return instrument
+
 #### Script Arguments ###############################################
 
 if len(sys.argv) != 3:
@@ -53,18 +66,6 @@ cfg = config.Config(
 )
 cfg.initialize()
 
-# modbus
-instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1) # port name, slave address (in decimal)
-
-instrument.serial.port          # this is the serial port name
-instrument.serial.baudrate = 9600   # Baud
-instrument.serial.bytesize = 8
-instrument.serial.stopbits = 2
-instrument.serial.timeout  = 0.5   # seconds
-
-instrument.mode = minimalmodbus.MODE_RTU   # rtu or ascii mode
-
-
 sys.stdout.write("Current loop and modbus sensor example \r\n")
 sys.stdout.write("Time, water-level,  temp1,  conduc, salinity, tds_kcl, temp2, pH, redox \r\n")
 #sys.stdout.write("Time, channel #1,  channel #2,  channel #3 ,  channel #4,  channel #5  channel #6 ,  channel #7,  channel #8   \r\n")
@@ -75,6 +76,8 @@ sensor1 = cfg.get_device("current_sensor1")
 
 while True:
     try:
+        # modbus
+        instrument = modBusInit()
         before = time.time()-interval
         while True:
             
