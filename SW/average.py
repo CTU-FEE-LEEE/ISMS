@@ -96,8 +96,10 @@ while True:
             flag = False # computation is not needed
         
         if flag == False:
+	    print ("Nothing to compute, waiting...")
             time.sleep(sleepTime) #long sleep, because is nothing to process
     
-    except ValueError:
-        print ValueError
+    except Exception as e:
+	print type(e)
+        print (str(e))
         time.sleep(10)

@@ -23,7 +23,7 @@ if len(sys.argv) != 2:
     sys.exit(1)
 
 value = parser.parse_file(sys.argv[1])
-path = value['data_path'] # raw data  /home/pi/Documents/Vrty/watchdog/test
+path = value['data_path'] # raw data
 sleepTime = value['WD_interval'] # sleep interval for soft. WD
 errCnt = value['error_counter'] # error counter for soft. WD
 
@@ -125,6 +125,7 @@ def main():
     writeLog("Starting watchdog daemon")
 
     while g_interrupt == 0:
+	print("Testing...")
         ## connection test
         if conTest("space.astro.cz") == 0:
             print "Connection test: PASS"
@@ -162,7 +163,8 @@ def main():
             print msg
             reboot("Memory usage test error - " + str(getMemUsage()) + "% used")
                 
-        #sleep section
+        print("Testing done")
+	#sleep section
         print "--------------------------"        
         for i in range(2*sleepTime):
             if g_interrupt == 1:                
