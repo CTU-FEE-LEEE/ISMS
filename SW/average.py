@@ -100,3 +100,4 @@ while True:
     
     except ValueError:
         print ValueError
+        time.sleep(10)
