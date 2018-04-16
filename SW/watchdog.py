@@ -42,7 +42,7 @@ def hwwd():
         """
         Hardware watchdog
         """
-        print "WD on, left:",wd.get_time_left()
+        #print "WD on, left:",wd.get_time_left()
         wd.keep_alive()
         time.sleep(g_HWWDSleep)
     # HWWD Off    
@@ -74,13 +74,24 @@ def getMemUsage():
     """
     info = psutil.virtual_memory()
     return info.percent
+    
+def prcsRunning(process = "default"):
+    """
+    Checks if the process is running
+    """    
+    if os.system("ps -A | grep " + process) == 0:
+        return True
+    else:
+        return False
+        
+    
 
 def writeLog(report):
     """
     Write a report line to log file with current time
     """
     try:
-        with open(WDLogPath + "log.txt", "a", 0) as f:
+        with open(WDLogPath + "WD_log.txt", "a", 0) as f:
             f.write("%d,%s\n" % (time.time(), str(report)))
             f.flush()
         f.close()
@@ -112,6 +123,7 @@ def main():
     # error coutners
     errCntConn = 0
     errCntFolder = 0
+    errCntProcess = 0
 
     # Handler for key interrupt
     def handler(signum, frame):
@@ -127,8 +139,8 @@ def main():
     signal.signal(signal.SIGINT, handler)
     writeLog("Starting watchdog daemon")
 
-    while g_interrupt == 0:
-	print("Testing...")
+    while g_interrupt == 0:        
+        print("Testing...")
         ## connection test
         if conTest("space.astro.cz") == 0:
             print "Connection test: PASS"
@@ -165,9 +177,53 @@ def main():
             msg = "Memory usage test: FAIL. Memory usage:" + str(getMemUsage()) + "%"
             print msg
             reboot("Memory usage test error - " + str(getMemUsage()) + "% used")
+            
+        ## Running process tests
+        process = "ISMS"
+        if prcsRunning(process):
+            print "Running process \"" + process + "\" test: PASS"                         
+        else:            
+            errCntProcess += 1
+            msg = "Running process \"" + process + "\" test: FAIL"
+            writeLog(msg)
+            print msg
+            
+        process = "average"
+        if prcsRunning(process):
+            print "Running process \"" + process + "\" test: PASS"             
+        else:            
+            errCntProcess += 1
+            msg = "Running process \"" + process + "\" test: FAIL"
+            writeLog(msg)
+            print msg
+            
+        process = "dataUpload"
+        if prcsRunning(process):
+            print "Running process \"" + process + "\" test: PASS"             
+        else:            
+            errCntProcess += 1
+            msg = "Running process \"" + process + "\" test: FAIL"
+            writeLog(msg)
+            print msg
+            
+        process = "button_monitor"
+        if prcsRunning(process):
+            print "Running process \"" + process + "\" test: PASS"             
+        else:            
+            errCntProcess += 1
+            msg = "Running process \"" + process + "\" test: FAIL"
+            writeLog(msg)
+            print msg
+            
+        if errCntProcess >= errCnt:
+            reboot("Running process tests - exceed boundaries")
+            break
+        else:
+            errCntProcess = 0
                 
         print("Testing done")
-	#sleep section
+        
+        #sleep section
         print "--------------------------"        
         for i in range(2*sleepTime):
             if g_interrupt == 1:                
