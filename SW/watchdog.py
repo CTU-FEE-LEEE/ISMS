@@ -179,11 +179,12 @@ def main():
             reboot("Memory usage test error - " + str(getMemUsage()) + "% used")
             
         ## Running process tests
+        processFlag = 0
         process = "ISMS"
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"                         
         else:            
-            errCntProcess += 1
+            processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
@@ -192,7 +193,7 @@ def main():
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"             
         else:            
-            errCntProcess += 1
+            processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
@@ -201,7 +202,7 @@ def main():
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"             
         else:            
-            errCntProcess += 1
+            processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
@@ -210,16 +211,20 @@ def main():
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"             
         else:            
-            errCntProcess += 1
+            processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
             
+        if processFlag == 1:
+            errCntProcess += 1
+        else:
+            errCntProcess = 0
+            
         if errCntProcess >= errCnt:
             reboot("Running process tests - exceed boundaries")
             break
-        else:
-            errCntProcess = 0
+
                 
         print("Testing done")
         
