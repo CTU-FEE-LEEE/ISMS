@@ -23,9 +23,11 @@ if len(sys.argv) != 2:
     sys.exit(1)
 
 value = parser.parse_file(sys.argv[1])
-path = value['data_path'] # raw data
+dataPath = value['data_path'] # raw data
+WDLogPath = value['project_home_folder'] # raw data
 sleepTime = value['WD_interval'] # sleep interval for soft. WD
 errCnt = value['error_counter'] # error counter for soft. WD
+
 
 #### Declaration ###############################################
 
@@ -78,7 +80,7 @@ def writeLog(report):
     Write a report line to log file with current time
     """
     try:
-        with open("log.txt", "a", 0) as f:
+        with open(WDLogPath + "log.txt", "a", 0) as f:
             f.write("%d,%s\n" % (time.time(), str(report)))
             f.flush()
         f.close()
@@ -102,7 +104,8 @@ def reboot(msg = "default"):
 def main():
     global g_interrupt
     global sleepTime
-    global path
+    global dataPath
+    global WDLogPath
     global errCnt
     folderSize = -1
 
@@ -141,10 +144,10 @@ def main():
             break
 
         ## Folder size test
-        if folderSize != getSize(path):
+        if folderSize != getSize(dataPath):
             print "Folder size test: PASS"
             errCntFolder = 0
-            folderSize = getSize(path)
+            folderSize = getSize(dataPath)
         else:
             errCntFolder += 1
             msg = "Folder size test: FAIL. Folder size error counter: " + str(errCntFolder)
