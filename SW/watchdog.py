@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 # sudo modprobe bcm_wdt - raspberry
 # http://raspberrypi.werquin.com/post/44890705367/a-hardware-watchdog-to-monitor-a-deamon-running
@@ -24,7 +24,7 @@ if len(sys.argv) != 2:
 
 value = parser.parse_file(sys.argv[1])
 dataPath = value['data_path'] # raw data
-WDLogPath = value['project_home_folder'] # raw data
+WDLogPath = "/home/odroid/repos/ISMS01A/SW/" #value['project_home_folder'] # raw data
 sleepTime = value['WD_interval'] # sleep interval for soft. WD
 errCnt = value['error_counter'] # error counter for soft. WD
 
@@ -94,9 +94,11 @@ def writeLog(report):
         with open(WDLogPath + "WD_log.txt", "a", 0) as f:
             f.write("%d,%s\n" % (time.time(), str(report)))
             f.flush()
+	    os.fsync(f.fileno())
         f.close()
-    except:
-        print("Cannot write to log file (log.txt)")
+    except Exception as e:
+        print("Cannot write to log file (WD_log.txt)")
+	print(str(e))
     
 def reboot(msg = "default"):
     """
@@ -237,7 +239,7 @@ def main():
 
     print "\nEnding..."
     time.sleep(g_HWWDSleep+1)
-    #wd.magic_close()
+    wd.magic_close()
     writeLog("Closing watchdog daemon")
     print "HW-WD off"
     print "Done"
