@@ -33,14 +33,26 @@ while True:
         print("Start")
         ## Create sorted list of csv files
         listOfDataFiles = list() #empty list
+        listOfMeteoFiles = list() #empty list
         listOfSpecDataFiles = list() #empty list
         files = list() #empty list
         flag = False # is computation needed
             
         files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
+        
+        for idx, val in enumerate(files): #goes through files
+            if val.endswith("meteo.csv"): # in case of meteo.csv        
+                listOfMeteoFiles.append(val) #add file to listOfFiles
+        
+        ## Find the newest and oldest and compare them. If they are from different day, compute the average of all measurement from oldest day
+        if len(listOfMeteoFiles)>=2: # if there are more than 2 data files            
+            for idx, file in enumerate(listOfMeteoFiles): #goes through listOfMeteoFiles except last one
+                if idx < len(listOfMeteoFiles)-1:
+                    os.rename(dataSource + file, dataUpload + file) # move file            
+                
         for idx, val in enumerate(files): #goes through files
             if val.endswith("data.csv"): # in case of *data.csv        
-                listOfDataFiles.append(val) #add file to listOfFiles
+                listOfDataFiles.append(val) #add file to listOfFiles        
 
         ## Find the newest and oldest and compare them. If they are from different day, compute the average of all measurement from oldest day
         if len(listOfDataFiles)>=2: # if there are more than 2 data files    
@@ -96,7 +108,7 @@ while True:
             flag = False # computation is not needed
         
         if flag == False:
-	    print ("Nothing to compute, waiting...")
+            print ("Nothing to compute or move, waiting...")
             time.sleep(sleepTime) #long sleep, because is nothing to process
     
     except Exception as e:
