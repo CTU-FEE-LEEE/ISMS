@@ -44,12 +44,14 @@ while True:
             if val.endswith("meteo.csv"): # in case of meteo.csv        
                 listOfMeteoFiles.append(val) #add file to listOfFiles
         
-        ## Find the newest and oldest and compare them. If they are from different day, compute the average of all measurement from oldest day
-        if len(listOfMeteoFiles)>=2: # if there are more than 2 data files            
+        ## Find the newest and move the rest of meteo files
+        if len(listOfMeteoFiles)>=2: # if there are more than 2 meteo files
+            print("Moving meteo files...")
             for idx, file in enumerate(listOfMeteoFiles): #goes through listOfMeteoFiles except last one
                 if idx < len(listOfMeteoFiles)-1:
                     os.rename(dataSource + file, dataUpload + file) # move file            
-                
+            print("Moving completed")
+            
         for idx, val in enumerate(files): #goes through files
             if val.endswith("data.csv"): # in case of *data.csv        
                 listOfDataFiles.append(val) #add file to listOfFiles        
