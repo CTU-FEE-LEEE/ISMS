@@ -122,6 +122,7 @@ while True:
                     f.write("%d;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f\n" % (time.time(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox))
                     f.flush()
                     sys.stdout.flush()
+                    os.fsync(f.fileno())
                     before = time.time()
                 f.close()
                 
