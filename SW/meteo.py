@@ -79,7 +79,7 @@ while(1):
         lst = getData(sensors)
 
         # create file name + path
-        filename = path + time.strftime("%Y%m%d%H", time.gmtime()) + "0000_" + stationName + "_meteo.csv"
+        filename = path + time.strftime("%Y%m%d", time.gmtime()) + "000000_" + stationName + "_meteo.csv"
 
         # save file
         if not lst:
