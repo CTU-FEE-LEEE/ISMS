@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 from pyModbusTCP.client import ModbusClient
 import time
 import sys
+import os
 
 from mlabutils import ejson
 parser = ejson.Parser()
@@ -59,6 +62,7 @@ def getData(sensors):
                 c.close()
                 break
         c.close()
+	print("--------------------------")
         return lst
 
 # save file
