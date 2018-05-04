@@ -141,7 +141,7 @@ def main():
     #after HW WD is on,wait 10 min
     print ("Waiting 10 min for all processes")
     print("Do not terminate now!")
-    time.sleep(120)
+    time.sleep(600)
          
     signal.signal(signal.SIGINT, handler)
     writeLog("Starting watchdog daemon")
