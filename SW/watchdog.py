@@ -223,8 +223,8 @@ def main():
 
         process = "meteo"
         if prcsRunning(process):
-            print "Running process \"" + process + "\" test: PASS".............
-        else:............
+            print "Running process \"" + process + "\" test: PASS"
+        else:
             processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
