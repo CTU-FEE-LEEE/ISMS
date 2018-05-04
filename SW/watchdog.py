@@ -137,6 +137,9 @@ def main():
     except:
         print "Error: unable to start thread"
         wd.magic_close()
+
+    #after HW WD is on,wait 10 min
+    time.sleep(600)
          
     signal.signal(signal.SIGINT, handler)
     writeLog("Starting watchdog daemon")
@@ -213,6 +216,15 @@ def main():
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"             
         else:            
+            processFlag = 1
+            msg = "Running process \"" + process + "\" test: FAIL"
+            writeLog(msg)
+            print msg
+
+        process = "meteo"
+        if prcsRunning(process):
+            print "Running process \"" + process + "\" test: PASS".............
+        else:............
             processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
