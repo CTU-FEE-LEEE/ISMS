@@ -139,7 +139,9 @@ def main():
         wd.magic_close()
 
     #after HW WD is on,wait 10 min
-    time.sleep(600)
+    print ("Waiting 10 min for all processes")
+    print("Do not terminate now!")
+    time.sleep(120)
          
     signal.signal(signal.SIGINT, handler)
     writeLog("Starting watchdog daemon")
@@ -156,7 +158,7 @@ def main():
             writeLog(msg)
             print msg
 
-        if errCntConn >= errCnt:
+        if errCntConn >= 2*errCnt:
             reboot("Connection test error - exceed boundaries")
             break
 
