@@ -19,6 +19,7 @@ if len(sys.argv) != 2:
 
 value = parser.parse_file(sys.argv[1])
 dataSource = value['data_path'] # raw data
+dataMeteo = value['data_meteo'] # meteo data
 dataArchive = value['data_archive'] # archive for row data
 dataUpload = value['data_upload'] # computed mean values for upload
 stationName = value['origin']
@@ -37,8 +38,11 @@ while True:
         listOfSpecDataFiles = list() #empty list
         files = list() #empty list
         flag = False # is computation needed
-            
-        files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
+         
+         
+        ## METEO DATA   
+        
+        files = sorted(os.listdir(dataMeteo)) # list of all files and folders in directory
         
         for idx, val in enumerate(files): #goes through files
             if val.endswith("meteo.csv"): # in case of meteo.csv        
@@ -49,9 +53,14 @@ while True:
             print("Moving meteo files...")
             for idx, file in enumerate(listOfMeteoFiles): #goes through listOfMeteoFiles except last one
                 if idx < len(listOfMeteoFiles)-1:
-                    os.rename(dataSource + file, dataUpload + file) # move file            
+                    os.rename(dataMeteo + file, dataUpload + file) # move file            
             print("Moving completed")
-            
+         
+         
+        ##DATA  
+        
+        files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
+        
         for idx, val in enumerate(files): #goes through files
             if val.endswith("data.csv"): # in case of *data.csv        
                 listOfDataFiles.append(val) #add file to listOfFiles        
