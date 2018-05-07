@@ -17,6 +17,7 @@
     "WD_interval": 600, // 10 min
     "error_counter": 3, // 6 same errors in a row = reboot
     "data_path":  "/home/odroid/geozor/station/data/", // path to measured data directory
+    "data_meteo":  "/home/odroid/geozor/station/data_meteo/", // path to meteo data directory
     "data_archive":  "/home/odroid/geozor/station/data_archive/", // path to raw data archive directory
     "data_upload":  "/home/odroid/geozor/station/data_upload/", // path to data ready for upload
     "origin": "VRTY-S2",      // name of detection station
