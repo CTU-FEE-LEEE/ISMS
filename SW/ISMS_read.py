@@ -9,6 +9,7 @@ import datetime
 import sys
 import os
 import minimalmodbus
+minimalmodbus.CLOSE_PORT_AFTER_EACH_CALL = True
 
 from pymlab import config
 from mlabutils import ejson
@@ -134,6 +135,6 @@ while True:
         sys.exit(0)
     except Exception as e:
         print(e)
-        time.sleep(5)
+        time.sleep(10)
 
 
