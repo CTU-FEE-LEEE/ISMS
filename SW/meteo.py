@@ -17,7 +17,7 @@ if len(sys.argv) != 2:
     sys.exit(1)
 
 value = parser.parse_file(sys.argv[1])
-path = value['data_path'] # raw data
+path = value['data_meteo'] # raw data
 interval = value['meteo_sample_interval'] # raw data
 stationName = value['origin']
 
