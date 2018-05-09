@@ -20,6 +20,7 @@
     "data_meteo":  "/home/odroid/geozor/station/data_meteo/", // path to meteo data directory
     "data_archive":  "/home/odroid/geozor/station/data_archive/", // path to raw data archive directory
     "data_upload":  "/home/odroid/geozor/station/data_upload/", // path to data ready for upload
+    "data_corrupted":  "/home/odroid/geozor/station/data_corrupted/", // path to data ready for upload
     "origin": "VRTY-S2",      // name of detection station
 }
 
