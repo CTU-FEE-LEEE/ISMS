@@ -22,6 +22,7 @@ dataSource = value['data_path'] # raw data
 dataMeteo = value['data_meteo'] # meteo data
 dataArchive = value['data_archive'] # archive for row data
 dataUpload = value['data_upload'] # computed mean values for upload
+dataCorrupted = value['data_corrupted'] # corrupted data archive
 stationName = value['origin']
 
 loop = 1
@@ -77,7 +78,7 @@ while True:
                 loop +=1
                 listOfSpecDataFiles = list() # empty list
             
-                for file in listOfDataFiles: # go through data files and create lis of data files measured on same day                
+                for file in listOfDataFiles: # go through data files and create list of data files measured on same day                
                     # if the day is same like the first one
                     if time.mktime(datetime.datetime.strptime(first[:8], "%Y%m%d").timetuple()) == time.mktime(datetime.datetime.strptime(file[:8], "%Y%m%d").timetuple()):
                         listOfSpecDataFiles.append(file)
@@ -89,19 +90,27 @@ while True:
                     f.write(csvHeader.rstrip('\r\n') + '\n')
                     f.close()
                 
-                for file in listOfSpecDataFiles:             
-                    df=pd.read_csv(dataSource + file, sep=';', header=None) # read current csv
-                    dim=df.shape # gets data file dimensions
-                    rowsInd=dim[0] # maximal index of rows
-                    columnsInd=dim[1] # maximal index of columns
-                    values=pd.DataFrame() # empty DataFrame
+                for file in listOfSpecDataFiles:
+                    try:
+                        df=pd.read_csv(dataSource + file, sep=';', header=None) # read current csv
+                        dim=df.shape # gets data file dimensions
+                        rowsInd=dim[0] # maximal index of rows
+                        columnsInd=dim[1] # maximal index of columns
+                        values=pd.DataFrame() # empty DataFrame
 
-                    for x in range(0,columnsInd): # for each column
-                        values = values.set_value(0,x,round(df[x].mean(),3),0) #calculates mean value for all cloumns and round it by 3
+                        for x in range(0,columnsInd): # for each column
+                            values = values.set_value(0,x,round(df[x].mean(),3),0) #calculates mean value for all cloumns and round it by 3
+                        
+                        outfile = open(filename, 'a')
+                        values.to_csv(filename, sep=';', header=False, index=False, mode='a') # save (add) DataFrame to csv
+                        outfile.close()
                     
-                    outfile = open(filename, 'a')
-                    values.to_csv(filename, sep=';', header=False, index=False, mode='a') # save (add) DataFrame to csv
-                    outfile.close()
+                    except Exception as err:
+                        print (str(err))
+                        print ("Corrupted data in file: " + file)
+                        os.rename(dataSource + file, dataCorrupted + file) # move file
+                        listOfSpecDataFiles.remove(file) # delte file from list
+                        
                 
                 # move files to archive structure
                 for file in listOfSpecDataFiles:
@@ -123,6 +132,6 @@ while True:
             time.sleep(sleepTime) #long sleep, because is nothing to process
     
     except Exception as e:
-	print type(e)
+        print type(e)
         print (str(e))
         time.sleep(10)
