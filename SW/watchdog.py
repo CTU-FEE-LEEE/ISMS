@@ -138,13 +138,14 @@ def main():
         print "Error: unable to start thread"
         wd.magic_close()
 
+    writeLog("Starting watchdog daemon")
     #after HW WD is on,wait 10 min
     print ("Waiting 10 min for all processes")
     print("Do not terminate now!")
     time.sleep(600)
          
     signal.signal(signal.SIGINT, handler)
-    writeLog("Starting watchdog daemon")
+
 
     while g_interrupt == 0:        
         print("Testing...")
