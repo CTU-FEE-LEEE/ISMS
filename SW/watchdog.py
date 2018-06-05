@@ -150,7 +150,7 @@ def main():
     while g_interrupt == 0:        
         print("Testing...")
         ## connection test
-        if conTest("space.astro.cz") == 0:
+        if conTest("85.207.12.165") == 0: # chemkomex address
             print "Connection test: PASS"
             errCntConn  = 0
         else:
