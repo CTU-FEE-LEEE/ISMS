@@ -11,6 +11,17 @@
     "storage_hostname": "space.astro.cz",
     "storage_username": "kaklik",
     "storage_stationpath": "/storage/geozor/",
+    "observatory": [
+	    {
+		"name": "patek",
+		"owner.login": "kaklik", // GitHub login
+		"lat": 50.166225,
+		"lon": 15.158831,
+		"alt": 189.0,
+		"location": "Patek",	//City, local name
+	    }
+    ],    
+    
 
     "raw_sample_interval": 5,
     "meteo_sample_interval": 600, // 10 min
