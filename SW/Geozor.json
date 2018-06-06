@@ -8,9 +8,12 @@
 
     "project": "geozor",
     "project_home_folder": "/home/odroid/geozor/station/",
-    "storage_hostname": "space.astro.cz",
+    "storage_hostname": "85.207.12.165",
     "storage_username": "kaklik",
     "storage_stationpath": "/storage/geozor/",
+    
+    "HWversion": "ISMS01B",
+
     "observatory": [
 	    {
 		"name": "patek",
@@ -32,7 +35,19 @@
     "data_archive":  "/home/odroid/geozor/station/data_archive/", // path to raw data archive directory
     "data_upload":  "/home/odroid/geozor/station/data_upload/", // path to data ready for upload
     "data_corrupted":  "/home/odroid/geozor/station/data_corrupted/", // path to corrupted data
-    "origin": "VRTY-S2",      // name of detection station
+    "origin": "VRTY-S3",      // name of detection station
+
+    "configurations": [
+	{
+
+	    "children": [
+		{
+		    "origin": "VRTY-S3",      // name of detection station
+		}
+	    ],
+	}
+    ],
+
 }
 
 
