@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Station at Patek</title>
+        <meta charset="utf-8">
+        <style> /* set the CSS */
+        
+        .line {
+          fill: none;
+          stroke: steelblue;
+          stroke-width: 2px;
+        }
+
+        .lineBlue {
+          fill: none;
+          stroke: steelblue;
+          stroke-width: 2px;
+        }
+        
+        .lineRed {
+          fill: none;
+          stroke: Red;
+          stroke-width: 2px;
+        }
+        
+        
+        .lineGreen1 {
+          fill: none;
+          stroke: mediumseagreen;
+          stroke-width: 2px;
+        }
+        
+        .lineGreen2 {
+          fill: none;
+          stroke: MediumAquaMarine;
+          stroke-width: 2px;
+        }
+        
+        .lineGreen3 {
+          fill: none;
+          stroke: MediumSpringGreen;
+          stroke-width: 2px;
+        }
+        
+        .lineOrange {
+          fill: none;
+          stroke: Orange;
+          stroke-width: 2px;
+        }
+        
+        .linePink {
+          fill: none;
+          stroke: DeepPink;
+          stroke-width: 2px;
+        }
+        </style>
+        
+        <link rel="stylesheet" href="stylesheets/calendarview.css">
+        <style>
+          body {
+            font-family: Trebuchet MS;
+          }
+          div.calendar {
+            max-width: 240px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          div.calendar table {
+            width: 100%;
+          }
+          div.dateField {
+            width: 140px;
+            padding: 6px;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            color: #555;
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+          }
+          div#popupDateField:hover {
+            background-color: #cde;
+            cursor: pointer;
+          }
+        </style>
+        
+        <script type="text/javascript" src="javascripts/prototype.js"></script>
+        <script type="text/javascript" src="javascripts/calendarview.js"></script>
+        <script type="text/javascript">
+            window.onload = function() {
+                Calendar.setup({
+                dateField     : 'dateField',
+                parentElement : 'calendar'
+                })
+                }
+        </script>        
+    </head>
+    <body>
+        
+        <center>
+
+            <table border="1">
+                <tr>
+                    <td rowspan="4">
+                        <!-- create calendar -->
+                        <div id="calendar"></div>
+                    </td>
+                    <td align="center">
+                        <!-- create date field -->
+                        <div id="dateField">Select Date</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <!-- create button -->
+                        <button onclick="myFunction()">Plot data</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <button type="submit" onclick="downloadData()">Download measured data</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <button type="submit" onclick="downloadMeteo()">Download weather data</button>
+                    </td>
+                </tr>
+            </table>
+            
+        </center>
+
+
+        <!-- load the d3.js library -->    	
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        
+        <script>
+            function downloadData(){
+                var inputDate = document.getElementById("dateField").innerHTML;
+                if (inputDate==="Select Date") alert("You have to select date first!");
+                else{
+                    try{
+                        var selectedDate = inputDate.split("-");
+                        var fileAdress = ("data/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_data_mean.csv");
+                        window.open(fileAdress)                        
+                    }catch(e){
+                        alert(e);
+                    }                    
+                }                
+            }
+        </script>
+        
+        <script>
+            function downloadMeteo(){
+                var inputDate = document.getElementById("dateField").innerHTML;
+                if (inputDate==="Select Date") alert("You have to select date first!");
+                else{
+                    try{
+                        var selectedDate = inputDate.split("-");
+                        var fileAdress = ("data_upload/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[2] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_meteo.csv");
+                        window.open(fileAdress)                        
+                    }catch(e){
+                        alert(e);
+                    }                    
+                }                
+            }
+        </script>
+        
+        <script>
+
+
+
+        function myFunction() {
+            var inputDate = document.getElementById("dateField").innerHTML;
+            if (inputDate==="Select Date") alert("You have to select date first!");
+            else{
+                try {        
+                    var selectedDate = inputDate.split("-");
+                
+                    var fileAdress = ("data/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_data_mean.csv");
+                    //console.log(fileAdress);
+                    
+                    //csv header
+                    var csvHeader = ['Date', 'LevelMeter', 'Temperature1', 'Conductivity', 'Salinity', 'TDSKcl', 'Temperature2', 'pH', 'Redox'];
+                    
+                    try{
+                        d3.selectAll('svg').remove();
+                    }catch(e){console.log(e);}            
+
+                      
+
+                    // set the dimensions and margins of the graph
+                    var innerWidth = window.innerWidth; //window resolution
+                    var innerHeight = window.innerHeight; //window resolution
+
+                    var margin = {top: 20, right: innerWidth*0.05, bottom: 30, left: innerWidth*0.05}, //5*% from lef and right
+                        width = innerWidth - margin.left - margin.right,
+                        height = innerHeight/3 - margin.top - margin.bottom; //3 plots per page
+
+                    // set the ranges
+                    var x = d3.scaleTime().range([0, width]);
+                    var y = d3.scaleLinear().range([height, 0]);
+                    var dY = 0;
+                    var maxY = 0;
+                    var minY = 0;
+
+                    // append the svg obgect to the body of the page
+                    // appends a 'group' element to 'svg'
+                    // moves the 'group' element to the top left margin
+                    var svg1 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg2 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg3 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg4 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg5 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg6 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg7 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    var svg8 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                    // Get the data
+                    d3.text(fileAdress, function(error, raw){
+                      var dsv = d3.dsvFormat(';')
+                      var data = dsv.parse(raw)  
+                      if (error) throw error;  
+
+                      // format the data
+                      data.forEach(function(d) {
+                          d.date = new Date(d.Date*1000);
+                          for (var i = 1; i < csvHeader.length; i++) {
+                            eval('d.value' + i +' = +d.' + csvHeader[i]);
+                          }
+                      });
+                      
+                        // define the lines
+                        
+                        for (var i = 1; i < csvHeader.length; i++) {        
+                            eval('var valueline' + i +' = d3.line() .x(function(d) { return x(d.date); }) .y(function(d) { return y(d.value' + i +'); })');
+                        }
+
+                      // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value1; });
+                      minY = d3.min(data, function(d) { return d.value1; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg1.append("path")
+                          .data([data])
+                          .attr("class", "lineBlue")
+                          .attr("d", valueline1);	  
+
+                      // Add the X Axis
+                      svg1.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg1.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Level meter (m)");
+                          
+                        // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value2; });
+                      minY = d3.min(data, function(d) { return d.value2; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg2.append("path")
+                          .data([data])
+                          .attr("class", "lineRed")
+                          .attr("d", valueline2);	  
+
+                      // Add the X Axis
+                      svg2.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg2.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Temperature1 (°C)");
+                          
+                    // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value3; });
+                      minY = d3.min(data, function(d) { return d.value3; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg3.append("path")
+                          .data([data])
+                          .attr("class", "lineGreen1")
+                          .attr("d", valueline3);	  
+
+                      // Add the X Axis
+                      svg3.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg3.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Conductivity (uS/cm)");
+                          
+                        // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value4; });
+                      minY = d3.min(data, function(d) { return d.value4; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg4.append("path")
+                          .data([data])
+                          .attr("class", "lineGreen2")
+                          .attr("d", valueline4);	  
+
+                      // Add the X Axis
+                      svg4.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg4.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Salinity (ppt)");
+                          
+                      // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value5; });
+                      minY = d3.min(data, function(d) { return d.value5; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg5.append("path")
+                          .data([data])
+                          .attr("class", "lineGreen3")
+                          .attr("d", valueline5);	  
+
+                      // Add the X Axis
+                      svg5.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg5.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("TDS-Kcl (ppm)");
+                          
+                        // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value6; });
+                      minY = d3.min(data, function(d) { return d.value6; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg6.append("path")
+                          .data([data])
+                          .attr("class", "lineRed")
+                          .attr("d", valueline6);	  
+
+                      // Add the X Axis
+                      svg6.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg6.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Temperature2 (°C)");
+                          
+                    // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value7; });
+                      minY = d3.min(data, function(d) { return d.value7; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg7.append("path")
+                          .data([data])
+                          .attr("class", "lineOrange")
+                          .attr("d", valueline7);	  
+
+                      // Add the X Axis
+                      svg7.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg7.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("pH (-)");
+                          
+                        // Scale the range of the data
+                      maxY = d3.max(data, function(d) { return d.value8; });
+                      minY = d3.min(data, function(d) { return d.value8; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(data, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+
+                      // Add the valueline path.
+                      svg8.append("path")
+                          .data([data])
+                          .attr("class", "linePink")
+                          .attr("d", valueline8);	  
+
+                      // Add the X Axis
+                      svg8.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg8.append("g")
+                          .call(d3.axisLeft(y))                          
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Redox (mV)");
+
+                    });
+                }catch(e){
+                    alert(e);
+                    console.log(fileAdress);
+                    document.getElementById("dateField").innerText = e;
+                }
+            }
+        }
+        </script>
+    </body>
+</html>
