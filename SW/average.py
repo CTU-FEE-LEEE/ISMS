@@ -26,7 +26,8 @@ dataCorrupted = value['data_corrupted'] # corrupted data archive
 stationName = value['origin']
 
 loop = 1
-csvHeader = "Date;LevelMeter;Temperature1;Conductivity;Salinity;TDSKcl;Temperature2;pH;Redox" #csv header
+csvMeteoHeader = "Date;Wind_Dir;Wind_Speed;Gusty_wind;Precipitation;Temperature;Humidity;Atm_Pressure;Solar_Exposure;Dew_Point;Apparent_Temperature\n" #csv header
+csvDataHeader = "Date;LevelMeter;Temperature1;Conductivity;Salinity;TDSKcl;Temperature2;pH;Redox" #csv header
 sleepTime = 1000 # sleep time in seconds
 
 
@@ -59,7 +60,7 @@ while True:
                     original.close()
 
                     with open(dataUpload + file, 'w') as modified: # add header and save file
-                        modified.write("Date;Wind_Dir;Wind_Speed;Gusty_wind;Precipitation;Temperature;Humidity;Atm_Pressure;Solar_Exposure;Dew_Point;Apparent_Temperature\n" + data)
+                        modified.write(csvMeteoHeader + data)
                         modified.flush()
                         sys.stdout.flush()
                         os.fsync(modified.fileno())
@@ -105,7 +106,7 @@ while True:
                 
                 #adding header
                 with open(filename, 'w') as f:                    
-                    f.write(csvHeader.rstrip('\r\n') + '\n')
+                    f.write(csvDataHeader.rstrip('\r\n') + '\n')
                     f.close()
                 
                 for file in listOfSpecDataFiles:
