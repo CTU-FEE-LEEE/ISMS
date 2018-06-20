@@ -53,8 +53,26 @@ while True:
         if len(listOfMeteoFiles)>=2: # if there are more than 2 meteo files
             print("Moving meteo files...")
             for idx, file in enumerate(listOfMeteoFiles): #goes through listOfMeteoFiles except last one
-                if idx < len(listOfMeteoFiles)-1:
-                    os.rename(dataMeteo + file, dataUpload + file) # move file            
+                if idx < len(listOfMeteoFiles)-1:                    
+                    with open(dataMeteo + file, 'r') as original: # open and read file
+                        data = original.read()
+                    original.close()
+
+                    with open(dataUpload + file, 'w') as modified: # add header and save file
+                        modified.write("Date;Wind_Dir;Wind_Speed;Gusty_wind;Precipitation;Temperature;Humidity;Atm_Pressure;Solar_Exposure;Dew_Point;Apparent_Temperature\n" + data)
+                        modified.flush()
+                        sys.stdout.flush()
+                        os.fsync(modified.fileno())
+                    modified.close()
+                    
+                    year = file[:4]
+                    month = file[4:6]                    
+                    directory = dataArchive + year + "/" + month + "/"
+                    
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)                
+                    os.rename(dataMeteo + file, directory + file) # move file                    
+                    
             print("Moving completed")
          
          
