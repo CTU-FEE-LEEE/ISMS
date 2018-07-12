@@ -168,25 +168,14 @@
         </script>
         
         <script>
-
-
-
         function myFunction() {
             var inputDate = document.getElementById("dateField").innerHTML;
             if (inputDate==="Select Date") alert("You have to select date first!");
             else{
-                try {        
-                    var selectedDate = inputDate.split("-");
-                
-                    var fileAdress = ("data/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_data_mean.csv");
-                    //console.log(fileAdress);
-                    
-                    //csv header
-                    var csvHeader = ['Date', 'LevelMeter', 'Temperature1', 'Conductivity', 'Salinity', 'TDSKcl', 'Temperature2', 'pH', 'Redox'];
-                    
+                try {                     
                     try{
                         d3.selectAll('svg').remove();
-                    }catch(e){console.log(e);}            
+                    }catch(e){console.log(e);}
 
                       
 
@@ -264,8 +253,90 @@
                         .attr("transform",
                               "translate(" + margin.left + "," + margin.top + ")");
 
-                    // Get the data
-                    d3.text(fileAdress, function(error, raw){
+                                                            
+                    var svg9 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg10 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg11 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg12 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg13 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg14 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg15 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg16 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg17 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+                              
+                    var svg18 = d3.select("body").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                              "translate(" + margin.left + "," + margin.top + ")");
+
+                              
+                              
+                    var selectedDate = inputDate.split("-");                
+                    var dataFileAdress = ("data/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_data_mean.csv");
+                    
+                    //console.log(dataFileAdress);
+                    
+                    //csv header
+                    var csvMeteoHeader = ['Date', 'LevelMeter', 'Temperature1', 'Conductivity', 'Salinity', 'TDSKcl', 'Temperature2', 'pH', 'Redox'];
+                             
+
+                    // Get the measured data
+                    d3.text(dataFileAdress, function(error, raw){
                       var dsv = d3.dsvFormat(';')
                       var data = dsv.parse(raw)  
                       if (error) throw error;  
@@ -273,14 +344,14 @@
                       // format the data
                       data.forEach(function(d) {
                           d.date = new Date(d.Date*1000);
-                          for (var i = 1; i < csvHeader.length; i++) {
-                            eval('d.value' + i +' = +d.' + csvHeader[i]);
+                          for (var i = 1; i < csvMeteoHeader.length; i++) {
+                            eval('d.value' + i +' = +d.' + csvMeteoHeader[i]);
                           }
                       });
                       
                         // define the lines
                         
-                        for (var i = 1; i < csvHeader.length; i++) {        
+                        for (var i = 1; i < csvMeteoHeader.length; i++) {        
                             eval('var valueline' + i +' = d3.line() .x(function(d) { return x(d.date); }) .y(function(d) { return y(d.value' + i +'); })');
                         }
 
@@ -523,10 +594,333 @@
                           .attr("text-anchor", "end")
                           .text("Redox (mV)");
 
+                    });                    
+                    
+                    
+                    var meteoFileAdress = ("data_upload/" + selectedDate[0] + "/" + selectedDate[1] + "/" + selectedDate[2] + "/" + selectedDate[0]+selectedDate[1]+selectedDate[2] +"000000_PATEK-S3_meteo.csv");
+                    
+                    //console.log(meteoFileAdress);
+                    
+                    //csv header
+                    var csvDataHeader = ['Date', 'Wind_Dir', 'Wind_Speed', 'Gusty_wind', 'Precipitation', 'Temperature', 'Humidity', 'Atm_Pressure', 'Solar_Exposure', 'Dew_Point', 'Apparent_Temperature'];                    
+                             
+
+                    // Get the measured data
+                    d3.text(meteoFileAdress, function(error, raw){
+                      var dsv = d3.dsvFormat(';')
+                      var meteoData = dsv.parse(raw)  
+                      if (error) throw error;  
+
+                      // format the meteoData
+                      meteoData.forEach(function(d) {
+                          d.date = new Date(d.Date*1000);
+                          for (var i = 1; i < csvDataHeader.length; i++) {
+                            eval('d.value' + i +' = +d.' + csvDataHeader[i]);
+                          }
+                      });
+                      
+                        // define the lines
+                        
+                        for (var i = 1; i < csvDataHeader.length; i++) {        
+                            eval('var valueline' + i +' = d3.line() .x(function(d) { return x(d.date); }) .y(function(d) { return y(d.value' + i +'); })');
+                        }
+
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value1; });
+                      minY = d3.min(meteoData, function(d) { return d.value1; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg9.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineGreen1")
+                          .attr("d", valueline1);	  
+
+                      // Add the X Axis
+                      svg9.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg9.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Wind Direction (°)");
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value2; });
+                      minY = d3.min(meteoData, function(d) { return d.value2; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg10.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineBlue")
+                          .attr("d", valueline2);	  
+
+                      // Add the X Axis
+                      svg10.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg10.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Wind Speed (m/s)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value3; });
+                      minY = d3.min(meteoData, function(d) { return d.value3; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg11.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineGreen3")
+                          .attr("d", valueline3);	  
+
+                      // Add the X Axis
+                      svg11.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg11.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Gusty wind (m/s)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value4; });
+                      minY = d3.min(meteoData, function(d) { return d.value4; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg12.append("path")
+                          .data([meteoData])
+                          .attr("class", "linePink")
+                          .attr("d", valueline4);	  
+
+                      // Add the X Axis
+                      svg12.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg12.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Precipitation (mm)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value5; });
+                      minY = d3.min(meteoData, function(d) { return d.value5; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg13.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineRed")
+                          .attr("d", valueline5);	  
+
+                      // Add the X Axis
+                      svg13.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg13.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Temperature (°C"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value6; });
+                      minY = d3.min(meteoData, function(d) { return d.value6; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg14.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineGreen2")
+                          .attr("d", valueline6);	  
+
+                      // Add the X Axis
+                      svg14.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg14.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Humidity (%)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value7; });
+                      minY = d3.min(meteoData, function(d) { return d.value7; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg15.append("path")
+                          .data([meteoData])
+                          .attr("class", "linePink")
+                          .attr("d", valueline7);	  
+
+                      // Add the X Axis
+                      svg15.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg15.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Atmospheric pressure (hPa)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value8; });
+                      minY = d3.min(meteoData, function(d) { return d.value8; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg16.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineOrange")
+                          .attr("d", valueline8);	  
+
+                      // Add the X Axis
+                      svg16.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg16.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Solar exposure (W/m2)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value9; });
+                      minY = d3.min(meteoData, function(d) { return d.value9; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg17.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineBlue")
+                          .attr("d", valueline9);	  
+
+                      // Add the X Axis
+                      svg17.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg17.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Dew point (°C)"); 
+                          
+                      // Scale the range of the meteoData
+                      maxY = d3.max(meteoData, function(d) { return d.value10; });
+                      minY = d3.min(meteoData, function(d) { return d.value10; }); 
+                      dY = (maxY-minY)*1.1; //10% of scale
+                      x.domain(d3.extent(meteoData, function(d) { return d.date; }));  
+                      y.domain([maxY - dY,dY + minY]);
+
+                      // Add the valueline path.
+                      svg18.append("path")
+                          .data([meteoData])
+                          .attr("class", "lineGreen3")
+                          .attr("d", valueline10);	  
+
+                      // Add the X Axis
+                      svg18.append("g")
+                          .attr("transform", "translate(0," + height + ")")
+                          .call(d3.axisBottom(x));	  
+
+                      // Add the Y Axis
+                      svg18.append("g")
+                          .call(d3.axisLeft(y))
+                          .append("text")
+                          .attr("fill", "#000")
+                          .attr("transform", "rotate(-90)")
+                          .attr("y", 6)
+                          .attr("dy", "0.71em")
+                          .attr("text-anchor", "end")
+                          .text("Apparent temperature (°C)"); 
+
                     });
+                    
+                    
                 }catch(e){
                     alert(e);
-                    console.log(fileAdress);
+                    console.log(dataFileAdress);
                     document.getElementById("dateField").innerText = e;
                 }
             }
