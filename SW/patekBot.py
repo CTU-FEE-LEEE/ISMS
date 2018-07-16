@@ -96,7 +96,7 @@ def action(msg):
     elif command == '/data':
         telegram_bot.sendMessage(chat_id, getData())
 
-telegram_bot = telepot.Bot('555926597:AAFkExwKms3-3gPb95UrX8PC-Ce1RbXdC0U')
+telegram_bot = telepot.Bot('bot-api-key')
 
 print (telegram_bot.getMe())
 
