@@ -96,7 +96,12 @@ def action(msg):
     elif command == '/data':
         telegram_bot.sendMessage(chat_id, getData())
 
-telegram_bot = telepot.Bot('bot-api-key')
+
+with open('bot.key', 'r') as file: # open and read file with telegram API key
+    key = file.read()
+file.close()    
+
+telegram_bot = telepot.Bot(key)
 
 print (telegram_bot.getMe())
 
