@@ -60,6 +60,8 @@ def getMeteo():
             
             dataList = text.split(';')
             
+            string = ''
+            
             for idx, val in enumerate(dataList):
                 string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'            
             
