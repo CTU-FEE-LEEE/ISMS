@@ -64,7 +64,6 @@ def getMeteo():
             with open(dataMeteo + listOfMeteoFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
-                print text
             original.close()            
             
             dataList = text.split(';')
@@ -73,7 +72,7 @@ def getMeteo():
             
             for idx, val in enumerate(dataList):
                 string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'            
-            
+            print string
         else:
             string = "No files"
                 
@@ -98,7 +97,6 @@ def getData():
             with open(dataSource + listOfDataFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
-                print text
             original.close()
             
             dataList = text.split(';')
@@ -107,7 +105,7 @@ def getData():
             
             for idx, val in enumerate(dataList):
                 string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
-            
+            print string
         else:
             string = "No files"
                 
