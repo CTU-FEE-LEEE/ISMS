@@ -64,6 +64,7 @@ def getMeteo():
             with open(dataMeteo + listOfMeteoFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
+                text = text[:-1]
             original.close()            
             
             dataList = text.split(';')
@@ -97,6 +98,7 @@ def getData():
             with open(dataSource + listOfDataFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
+                text = text[:-1]
             original.close()
             
             dataList = text.split(';')
