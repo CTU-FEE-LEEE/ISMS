@@ -23,6 +23,21 @@ dataSource = value['data_path'] # raw data
 dataMeteo = value['data_meteo'] # meteo data
 stationName = value['origin']
 
+meteoSensors = [ ['Time','unix t.s.'],
+            ['Wind direction','deg'],
+            ['Wind speed','m/s'],
+            ['Gusty wind','m/s'],
+            ['Precipitation','mm'],
+            ['Temperature','C'],
+            ['Humidity','%'],
+            ['Atmospheric pressure','hPa'],
+            ['Solar exposure','W/m2'],
+            ['Dew point','C'],
+            ['Apparent temperature','C'],
+                                                ]
+                                                
+
+                                                
 now = datetime.datetime.now()
 
 def getMeteo():
@@ -39,9 +54,15 @@ def getMeteo():
         if len(listOfMeteoFiles)>0:            
             with open(dataMeteo + listOfMeteoFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
-                string = data[-1]
-                print string
-            original.close()
+                text = data[-1]
+                print text
+            original.close()            
+            
+            dataList = text.split(';')
+            
+            for idx, val in enumerate(dataList):
+                string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'            
+            
         else:
             string = "No files"
                 
