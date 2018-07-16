@@ -28,16 +28,25 @@ meteoSensors = [ ['Time','unix t.s.'],
             ['Wind speed','m/s'],
             ['Gusty wind','m/s'],
             ['Precipitation','mm'],
-            ['Temperature','C'],
+            ['Temperature','°C'],
             ['Humidity','%'],
             ['Atmospheric pressure','hPa'],
             ['Solar exposure','W/m2'],
             ['Dew point','C'],
-            ['Apparent temperature','C'],
+            ['Apparent temperature','°C'],
                                                 ]
                                                 
-
-                                                
+dataSensors = [ ['Time','unix t.s.'],
+            ['Level meter','m'],
+            ['Temperature1','°C'],
+            ['Conductivity','uS/cm'],
+            ['Salinity','ppt'],
+            ['TDS-Kcl','ppm'],
+            ['Temperature2','°C'],
+            ['pH','-'],
+            ['Redox','mV'],
+                                                ]
+  
 now = datetime.datetime.now()
 
 def getMeteo():
@@ -88,9 +97,17 @@ def getData():
         if len(listOfDataFiles)>0:            
             with open(dataSource + listOfDataFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
-                string = data[-1]
-                print string
+                text = data[-1]
+                print text
             original.close()
+            
+            dataList = text.split(';')
+            
+            string = ''
+            
+            for idx, val in enumerate(dataList):
+                string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
+            
         else:
             string = "No files"
                 
