@@ -48,7 +48,7 @@ dataSensors = [ ['Time','unix t.s.'],
                                                 ]
 
 hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"
-helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data"
+helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - download latest meteo file\n/dataFile - download latest data file"
 
 def getMeteoFile():
     try:
@@ -62,6 +62,30 @@ def getMeteoFile():
         
         if len(listOfMeteoFiles)>0:
             fileName = dataMeteo + listOfMeteoFiles[-1]
+
+        else:
+            fileName = "Cannot reach a file"
+                
+
+    except Exception as e:
+        string = "Error: " + str(e)
+        print string
+        fileName = "Cannot reach a file"
+        
+    return fileName
+    
+def getDataFile():
+    try:
+        listOfMeteoFiles = list() #empty list
+
+        files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
+        
+        for idx, val in enumerate(files): #goes through files
+            if val.endswith("meteo.csv"): # in case of meteo.csv        
+                listOfMeteoFiles.append(val) #add file to listOfFiles
+        
+        if len(listOfMeteoFiles)>0:
+            fileName = dataSource + listOfMeteoFiles[-1]
 
         else:
             fileName = "Cannot reach a file"
@@ -156,6 +180,12 @@ def action(msg):
         telegram_bot.sendMessage(chat_id, helpMessage)
     elif command == '/meteoFile':
         fileName = getMeteoFile()
+        if fileName is 'Cannot reach a file':
+            telegram_bot.sendMessage(chat_id, fileName)
+        else:
+            telegram_bot.sendDocument(chat_id, document=open(fileName))
+    elif command == '/dataFile':
+        fileName = getDataFile()
         if fileName is 'Cannot reach a file':
             telegram_bot.sendMessage(chat_id, fileName)
         else:
