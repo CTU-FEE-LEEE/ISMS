@@ -48,7 +48,7 @@ dataSensors = [ ['Time','unix t.s.'],
                                                 ]
 
 hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"
-helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - download latest meteo file\n/dataFile - download latest data file"
+helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - get latest meteo file\n/dataFile - get latest data file"
 
 def getMeteoFile():
     try:
