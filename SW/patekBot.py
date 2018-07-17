@@ -81,7 +81,7 @@ def getDataFile():
         files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
         
         for idx, val in enumerate(files): #goes through files
-            if val.endswith("meteo.csv"): # in case of meteo.csv        
+            if val.endswith("data.csv"): # in case of meteo.csv        
                 listOfMeteoFiles.append(val) #add file to listOfFiles
         
         if len(listOfMeteoFiles)>0:
