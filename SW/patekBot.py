@@ -46,8 +46,9 @@ dataSensors = [ ['Time','unix t.s.'],
             ['pH','-'],
             ['Redox','mV'],
                                                 ]
-  
-now = datetime.datetime.now()
+
+hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"
+helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data"
 
 def getMeteo():
     try:
@@ -122,19 +123,18 @@ def action(msg):
     command = msg['text']
     print 'Received: %s' % command
     if command == '/hi':
-        telegram_bot.sendMessage (chat_id, str("Hi! CircuitDigest"))
-    elif command == '/time':
-        telegram_bot.sendMessage(chat_id, str(now.hour)+str(":")+str(now.minute))
-    elif command == '/logo':
-        telegram_bot.sendPhoto (chat_id, photo = "https://i.pinimg.com/avatars/circuitdigest_1464122100_280.jpg")
-    elif command == '/file':
-        telegram_bot.sendDocument(chat_id, document=open('/home/pi/Aisha.py'))
-    elif command == '/audio':
-        telegram_bot.sendAudio(chat_id, audio=open('/home/pi/test.mp3'))
+        telegram_bot.sendMessage (chat_id, hiMessage)
     elif command == '/meteo':
         telegram_bot.sendMessage(chat_id, getMeteo())
     elif command == '/data':
         telegram_bot.sendMessage(chat_id, getData())
+    elif command == '/help':
+        telegram_bot.sendMessage(chat_id, helpMessage)
+        
+# telegram_bot.sendPhoto (chat_id, photo = "https://i.pinimg.com/avatars/circuitdigest_1464122100_280.jpg")
+# telegram_bot.sendDocument(chat_id, document=open('/home/pi/Aisha.py'))
+# telegram_bot.sendAudio(chat_id, audio=open('/home/pi/test.mp3'))
+
 
 
 with open('bot.key', 'r') as file: # open and read file with telegram API key
