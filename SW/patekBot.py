@@ -37,7 +37,7 @@ meteoSensors = [ ['Time','unix t.s.'],
                                                 ]
                                                 
 dataSensors = [ ['Time','unix t.s.'],
-            ['Level meter','m'],
+            ['Level meter','m a.s.l.'],
             ['Temperature1','C'],
             ['Conductivity','uS/cm'],
             ['Salinity','ppt'],
