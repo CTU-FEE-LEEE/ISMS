@@ -100,7 +100,7 @@ while True:
                 ##Reading
                 ## Read data from analog sensors ##
                 channel1 = sensor1.readCurrent();
-                channel1 = 0.2488*channel1-0.8892; # transformation from mA to meters
+                channel1 = (0.2488*channel1-0.8892) + 185.522; # transformation from mA to meters and add current altitude of sensor in meters
 
                 ## Read data from conductivity sensor ##
                 instrument.address = 0x1E    # this is the slave address number (1E-conductivity)
