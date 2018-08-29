@@ -121,14 +121,14 @@ while True:
                 sensor1.setADC(channel = 2, gain = 1, sample_rate = 3.75);
                 time.sleep(0.5)
                 channel2 = sensor1.readCurrent();
-                if channel2 < 3:
-                    channel2 = -1
+                #if channel2 < 3:
+                #    channel2 = -1
                     
-                if channel2 >= 3 and channel2 <= 4:
-                    channel2 = 0
+                #if channel2 >= 3 and channel2 <= 4:
+                #    channel2 = 0
                     
-                if channel2 > 4:
-                    channel2 = (6.25*channel2-25); # transformation from mA to % of H concentration                
+                #if channel2 > 4:
+                #    channel2 = (6.25*channel2-25); # transformation from mA to % of H concentration
                 
                 with open(filename, "a") as f:
                     sys.stdout.write("%s \t %0.3f \t  %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t \n" % (datetime.datetime.now().isoformat(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox, channel2))
