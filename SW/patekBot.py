@@ -45,6 +45,7 @@ dataSensors = [ ['Time','unix t.s.'],
             ['Temperature2','C'],
             ['pH','-'],
             ['Redox','mV'],
+            ['H-con','%'],
                                                 ]
 
 hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"

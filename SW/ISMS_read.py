@@ -68,7 +68,7 @@ cfg = config.Config(
 cfg.initialize()
 
 sys.stdout.write("Current loop and modbus sensor example \r\n")
-sys.stdout.write("Time, water-level,  temp1,  conduc, salinity, tds_kcl, temp2, pH, redox \r\n")
+sys.stdout.write("Time, water-level,  temp1,  conduc, salinity, tds_kcl, temp2, pH, redox, H-con \r\n")
 #sys.stdout.write("Time, channel #1,  channel #2,  channel #3 ,  channel #4,  channel #5  channel #6 ,  channel #7,  channel #8   \r\n")
 sensor1 = cfg.get_device("current_sensor1")
 #time.sleep(0.5)
@@ -98,7 +98,7 @@ while True:
                 time.sleep(0.5)
 
                 ##Reading
-                ## Read data from analog sensors ##
+                ## Read data from analog sensor ##
                 channel1 = sensor1.readCurrent();
                 channel1 = (0.2488*channel1-0.8892) + 185.522; # transformation from mA to meters and add current altitude of sensor in meters
 
@@ -115,12 +115,25 @@ while True:
                 
                 temperature2 = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals                
                 pH = instrument.read_float(0x55, 3, 2) # Registernumber, number of decimals                
-                redox = instrument.read_float(0x57, 3, 2) # Registernumber, number of decimals 
+                redox = instrument.read_float(0x57, 3, 2) # Registernumber, number of decimals
+
+                ## Read data from analog sensor ##                
+                sensor1.setADC(channel = 2, gain = 1, sample_rate = 3.75);
+                time.sleep(0.5)
+                channel2 = sensor1.readCurrent();
+                if channel2 < 3:
+                    channel2 = -1
+                    
+                if channel2 >= 3 and channel2 <= 4:
+                    channel2 = 0
+                    
+                if channel2 > 4:
+                    channel2 = (6.25*channel2-25); # transformation from mA to % of H concentration                
                 
                 with open(filename, "a") as f:
-                    sys.stdout.write("%s \t %0.3f \t  %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t \n" % (datetime.datetime.now().isoformat(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox))
+                    sys.stdout.write("%s \t %0.3f \t  %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t \n" % (datetime.datetime.now().isoformat(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox, channel2))
 
-                    f.write("%d;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f\n" % (time.time(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox))
+                    f.write("%d;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f;%0.3f\n" % (time.time(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox, channel2))
                     f.flush()
                     sys.stdout.flush()
                     os.fsync(f.fileno())

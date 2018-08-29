@@ -27,7 +27,7 @@ stationName = value['origin']
 
 loop = 1
 csvMeteoHeader = "Date;Wind_Dir;Wind_Speed;Gusty_wind;Precipitation;Temperature;Humidity;Atm_Pressure;Solar_Exposure;Dew_Point;Apparent_Temperature\n" #csv header
-csvDataHeader = "Date;LevelMeter;Temperature1;Conductivity;Salinity;TDSKcl;Temperature2;pH;Redox" #csv header
+csvDataHeader = "Date;LevelMeter;Temperature1;Conductivity;Salinity;TDSKcl;Temperature2;pH;Redox;H-con" #csv header
 sleepTime = 1000 # sleep time in seconds
 
 
