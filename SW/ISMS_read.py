@@ -68,7 +68,7 @@ cfg = config.Config(
 cfg.initialize()
 
 sys.stdout.write("Current loop and modbus sensor example \r\n")
-sys.stdout.write("Time, water-level,  temp1,  conduc, salinity, tds_kcl, temp2, pH, redox, H-con \r\n")
+sys.stdout.write("Time, water-level,  temp1,  conduc, salinity, tds_kcl, temp2, pH, redox, H_con \r\n")
 #sys.stdout.write("Time, channel #1,  channel #2,  channel #3 ,  channel #4,  channel #5  channel #6 ,  channel #7,  channel #8   \r\n")
 sensor1 = cfg.get_device("current_sensor1")
 #time.sleep(0.5)
