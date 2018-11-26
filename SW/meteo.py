@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from pyModbusTCP.client import ModbusClient
+from pyModbusTCP import utils
 import time
 import sys
 import os
@@ -55,8 +56,8 @@ def getData(sensors):
             # Read 16 bits registers:
             regs = c.read_holding_registers(sensors[i][0], 1)            
             if regs:
-                lst.append(float(regs[0])/10)
-                print(sensors[i][1] + ": " + str(float(regs[0])/10) + " " + sensors[i][2])
+                lst.append(float(utils.get_2comp(regs[0], val_size=16))/10)
+                print(sensors[i][1] + ": " + str(float(utils.get_2comp(regs[0], val_size=16))/10) + " " + sensors[i][2])
             else:                
                 lst[:] = []
                 c.close()
