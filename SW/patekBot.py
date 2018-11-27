@@ -48,6 +48,12 @@ dataSensors = [ ['Time','unix t.s.'],
             ['H-con','%'],
                                                 ]
 
+with open('bot.key', 'r') as file: # open and read file with telegram API key
+    f = file.read()
+file.close()
+key = f.splitlines()[0]
+reb = f.splitlines()[1]
+
 hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"
 helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - get latest meteo file\n/dataFile - get latest data file"
 
@@ -166,6 +172,85 @@ def getData():
         string = "Error: " + str(e)
         
     return string
+    
+def rebootStatus():
+    try:
+        if os.path.exists('reboot.txt'): # check if file exists
+            with open('reboot.txt', 'r') as file: # read file
+                f = file.read()
+            file.close()
+            
+            if f == 'OFF' or f == 'ON':
+                if f == 'OFF':       
+                    string = "Reboot status: OFF"        
+                else:
+                    with open('reboot.txt', 'r+') as file: # open, read and write            
+                        file.truncate(0)
+                        file.write('OFF')
+                    file.close()        
+                    string = "Reboot status: ON"
+                    
+                print string
+            else:
+                with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
+                    file.truncate(0)
+                    file.write('OFF')
+                file.close()
+                string = "Incorrect content of reboot file\nReboot status set to OFF"
+                print string
+        else:
+            with open('reboot.txt', 'w') as file: # write OFF
+                file.write('OFF')
+                f = 'OFF'
+            file.close()
+            string = "Missing reboot file\nFile added\nReboot status set to OFF"
+            print string                
+
+    except Exception as e:
+        string = "Error: " + str(e)
+        
+    return string
+    
+def reboot():
+    try:
+        if os.path.exists('reboot.txt'): # check if file exists
+            with open('reboot.txt', 'r') as file: # read file
+                f = file.read()
+            file.close()
+            
+            if f == 'OFF' or f == 'ON':
+                if f == 'OFF':
+                    with open('reboot.txt', 'r+') as file: # open, read and write            
+                        file.truncate(0)
+                        file.write('ON')
+                    file.close()        
+                    string = "OFF was changed to ON\nWaiting for reboot..."        
+                else:
+                    with open('reboot.txt', 'r+') as file: # open, read and write            
+                        file.truncate(0)
+                        file.write('OFF')
+                    file.close()        
+                    string = "ON was changed to OFF\nRebooting stopped"                
+            else:
+                with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
+                    file.truncate(0)
+                    file.write('OFF')
+                file.close()
+                string = "Incorrect content of reboot file\nReboot status set to OFF"
+            print string
+        else:
+            with open('reboot.txt', 'w') as file: # write OFF
+                file.write('OFF')
+                f = 'OFF'
+            file.close()
+            string = "Missing reboot file\nFile added\nReboot status set to OFF"
+            print string
+                
+
+    except Exception as e:
+        string = "Error: " + str(e)
+        
+    return string
 
 def action(msg):
     chat_id = msg['chat']['id']
@@ -177,6 +262,10 @@ def action(msg):
         telegram_bot.sendMessage(chat_id, getMeteo())
     elif command == '/data':
         telegram_bot.sendMessage(chat_id, getData())
+    elif command == '/reboot':
+        telegram_bot.sendMessage(chat_id, rebootStatus())
+    elif command == reb:
+        telegram_bot.sendMessage(chat_id, reboot())
     elif command == '/help':
         telegram_bot.sendMessage(chat_id, helpMessage)
     elif command == '/meteoFile':
@@ -199,9 +288,7 @@ def action(msg):
 
 
 
-with open('bot.key', 'r') as file: # open and read file with telegram API key
-    key = file.read()
-file.close()    
+
 
 telegram_bot = telepot.Bot(key)
 
