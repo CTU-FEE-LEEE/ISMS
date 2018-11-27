@@ -55,7 +55,7 @@ key = f.splitlines()[0]
 reb = f.splitlines()[1]
 
 hiMessage = "Hi,\nthis is the data logging station at Patek.\nUse /help command for overview of commands"
-helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - get latest meteo file\n/dataFile - get latest data file"
+helpMessage = "/hi - welcome message\n/help - overview of commands\n/meteo - get latest meteo data\n/data - get latest measured data\n/meteoFile - get latest meteo file\n/dataFile - get latest data file\n/reboot - get reboot status"
 
 def getMeteoFile():
     try:
@@ -183,11 +183,7 @@ def rebootStatus():
             if f == 'OFF' or f == 'ON':
                 if f == 'OFF':       
                     string = "Reboot status: OFF"        
-                else:
-                    with open('reboot.txt', 'r+') as file: # open, read and write            
-                        file.truncate(0)
-                        file.write('OFF')
-                    file.close()        
+                else:     
                     string = "Reboot status: ON"
                     
                 print string
