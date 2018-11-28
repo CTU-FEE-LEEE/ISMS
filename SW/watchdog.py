@@ -204,12 +204,14 @@ def main():
                         file.truncate(0)
                         file.write('OFF')
                     file.close()
+                    os.chmod("reboot.txt", 777)
                     string = "Reboot request test: Incorrect content - file modified"
                 print string
             else:
                 with open('reboot.txt', 'w') as file: # write OFF
                     file.write('OFF')                    
                 file.close()
+                os.chmod("reboot.txt", 777)
                 string = "Reboot request test: Missing reboot file - file added"
                 print string
 
