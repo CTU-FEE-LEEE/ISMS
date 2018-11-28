@@ -186,6 +186,37 @@ def main():
             print msg
             reboot("Memory usage test error - " + str(getMemUsage()) + "% used")
             
+        ## Reboot request test   
+        try:
+            if os.path.exists('reboot.txt'): # check if file exists
+                with open('reboot.txt', 'r') as file: # read file
+                    f = file.read()
+                file.close()
+                
+                if f == 'OFF' or f == 'ON':
+                    if f == 'ON':      
+                        string = "Reboot request test: Reboot requested"                        
+                    else:
+                        string = "Reboot request test: PASS"                
+                else:
+                    with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
+                        file.truncate(0)
+                        file.write('OFF')
+                    file.close()
+                    string = "Reboot request test: Incorrect content - file created"
+                print string
+            else:
+                with open('reboot.txt', 'w') as file: # write OFF
+                    file.write('OFF')                    
+                file.close()
+                string = "Reboot request test: Missing reboot file - file added"
+                print string
+
+        except Exception as e:
+            string = "Error: " + str(e)
+            print string
+            writeLog(str(msg))
+            
         ## Running process tests
         processFlag = 0
         process = "ISMS"
