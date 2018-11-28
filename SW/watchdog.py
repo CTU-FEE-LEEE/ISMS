@@ -199,31 +199,31 @@ def main():
                             file.truncate(0)
                             file.write('OFF')
                         file.close()
-                        string = "Reboot request test: Reboot requested"
-                        print string
-                        reboot(string)
+                        msg = "Reboot request test: Reboot requested"
+                        print msg
+                        reboot(msg)
                     else:
-                        string = "Reboot request test: PASS"                
+                        msg = "Reboot request test: PASS"                
                 else:
                     with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
                         file.truncate(0)
                         file.write('OFF')
                     file.close()
                     os.chmod("reboot.txt", 0o777)
-                    string = "Reboot request test: Incorrect content - file modified"
-                print string
+                    msg = "Reboot request test: Incorrect content - file modified"
+                print msg
             else:
                 with open('reboot.txt', 'w') as file: # write OFF
                     file.write('OFF')                    
                 file.close()
                 os.chmod("reboot.txt", 0o777)
-                string = "Reboot request test: Missing reboot file - file added"
-                print string
+                msg = "Reboot request test: Missing reboot file - file added"
+                print msg
 
         except Exception as e:
-            string = "Error: " + str(e)
-            print string
-            writeLog(str(string))
+            msg = "Error: " + str(e)
+            print msg
+            writeLog(str(msg))
             
         ## Running process tests
         processFlag = 0
