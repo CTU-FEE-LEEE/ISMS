@@ -188,14 +188,14 @@ def main():
             
         ## Reboot request test   
         try:
-            if os.path.exists('reboot.txt'): # check if file exists
-                with open('reboot.txt', 'r') as file: # read file
+            if os.path.exists('/home/odroid/repos/ISMS01A/SW/reboot.txt'): # check if file exists
+                with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r') as file: # read file
                     f = file.read()
                 file.close()
                 
                 if f == 'OFF' or f == 'ON':
                     if f == 'ON':
-                        with open('reboot.txt', 'r+') as file: # switch to off
+                        with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r+') as file: # switch to off
                             file.truncate(0)
                             file.write('OFF')
                         file.close()
@@ -205,18 +205,18 @@ def main():
                     else:
                         msg = "Reboot request test: PASS"                
                 else:
-                    with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
+                    with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r+') as file: # if there is not OFF or ON
                         file.truncate(0)
                         file.write('OFF')
                     file.close()
-                    os.chmod("reboot.txt", 0o777)
+                    os.chmod("/home/odroid/repos/ISMS01A/SW/reboot.txt", 0o777)
                     msg = "Reboot request test: Incorrect content - file modified"
                 print msg
             else:
-                with open('reboot.txt', 'w') as file: # write OFF
+                with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'w') as file: # write OFF
                     file.write('OFF')                    
                 file.close()
-                os.chmod("reboot.txt", 0o777)
+                os.chmod("/home/odroid/repos/ISMS01A/SW/reboot.txt", 0o777)
                 msg = "Reboot request test: Missing reboot file - file added"
                 print msg
 
