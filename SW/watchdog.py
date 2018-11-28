@@ -223,7 +223,7 @@ def main():
         except Exception as e:
             string = "Error: " + str(e)
             print string
-            writeLog(str(msg))
+            writeLog(str(string))
             
         ## Running process tests
         processFlag = 0
