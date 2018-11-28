@@ -194,8 +194,13 @@ def main():
                 file.close()
                 
                 if f == 'OFF' or f == 'ON':
-                    if f == 'ON':      
+                    if f == 'ON':
+                        with open('reboot.txt', 'r+') as file: # switch to off
+                            file.truncate(0)
+                            file.write('OFF')
+                        file.close()
                         string = "Reboot request test: Reboot requested"
+                        print string
                         reboot(string)
                     else:
                         string = "Reboot request test: PASS"                
