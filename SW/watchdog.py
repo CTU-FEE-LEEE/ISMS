@@ -195,7 +195,8 @@ def main():
                 
                 if f == 'OFF' or f == 'ON':
                     if f == 'ON':      
-                        string = "Reboot request test: Reboot requested"                        
+                        string = "Reboot request test: Reboot requested"
+                        reboot(string)
                     else:
                         string = "Reboot request test: PASS"                
                 else:
@@ -203,7 +204,7 @@ def main():
                         file.truncate(0)
                         file.write('OFF')
                     file.close()
-                    string = "Reboot request test: Incorrect content - file created"
+                    string = "Reboot request test: Incorrect content - file modified"
                 print string
             else:
                 with open('reboot.txt', 'w') as file: # write OFF
