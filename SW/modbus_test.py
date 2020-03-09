@@ -29,10 +29,11 @@ while True:
         tds_kcl = instrument.read_float(0x59, 3, 2) # Registernumber, number of decimals
         print tds_kcl
 
+        print("")
         time.sleep(2)
 
     except Exception as e:
-        print e
+        print(e)
 
 
 ## Change temperature setpoint (SP) ##
