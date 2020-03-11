@@ -12,7 +12,7 @@ instrument.serial.timeout  = 0.5   # seconds
 
 instrument.address = 0x1E    # this is the slave address number
 instrument.mode = minimalmodbus.MODE_RTU   # rtu or ascii mode
-instrument.close_port_after_each_call = True
+instrument.clear_buffers_before_each_transaction = True
 
 for i in range(0,100):
     try:
