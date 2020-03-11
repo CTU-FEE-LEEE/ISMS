@@ -98,7 +98,7 @@ while True:
                         rq = client.write_register(address = 0x01, value = 0x1F, unit = UNIT) # measure data
                         time.sleep(0.5)
                         # read data:
-                        temperature = reg2val(client.read_holding_registers(address = 0x53, count = 2, unit = UNIT))
+                        temperature1 = reg2val(client.read_holding_registers(address = 0x53, count = 2, unit = UNIT))
                         conductivity = reg2val(client.read_holding_registers(address = 0x55, count = 2, unit = UNIT))
                         salinity = reg2val(client.read_holding_registers(address = 0x57, count = 2, unit = UNIT))
                         tds_kcl = reg2val(client.read_holding_registers(address = 0x59, count = 2, unit = UNIT))
@@ -108,7 +108,8 @@ while True:
 
                     except Exception as e:
                         print(str(e))
-                        print(str(i))
+                        mes = 'Comunication with conductivity probe, attempt: ' + str(i)
+                        print(mes)
                         client.close()
                         if i == 99:
                             print("Cannot read from conductivity probe")
@@ -137,7 +138,8 @@ while True:
 
                     except Exception as e:
                         print(str(e))
-                        print(str(i))
+                        mes = 'Comunication with pH probe, attempt: ' + str(i)
+                        print(mes)
                         client.close()
                         if i == 99:
                             print("Cannot read from pH probe")
