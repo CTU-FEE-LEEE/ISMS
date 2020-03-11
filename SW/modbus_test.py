@@ -16,17 +16,6 @@ instrument.mode = minimalmodbus.MODE_RTU   # rtu or ascii mode
 
 for i in range(0,100):
     try:
-        instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1) # port name, slave address (in decimal)
-
-        instrument.serial.port          # this is the serial port name
-        instrument.serial.baudrate = 9600   # Baud
-        instrument.serial.bytesize = 8
-        instrument.serial.stopbits = 2
-        instrument.serial.timeout  = 0.5   # seconds
-
-        instrument.address = 0x1E    # this is the slave address number
-        instrument.mode = minimalmodbus.MODE_RTU   # rtu or ascii mode
-
         instrument.write_register(0x01, 0x1F, 0) # Registernumber, value, number of decimals for storage
 
         time.sleep(0.5)
@@ -46,7 +35,7 @@ for i in range(0,100):
 
     except Exception as e:
         print(str(e))
-        instrument.close_port_after_each_call = True
+        print(str(i))
         if i == 99:
             print("Cannot read from conductivity probe")
             temperature = 0
