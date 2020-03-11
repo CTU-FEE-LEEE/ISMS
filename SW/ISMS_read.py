@@ -108,7 +108,7 @@ while True:
 
                     except Exception as e:
                         print(str(e))
-                        mes = 'Comunication with conductivity probe, attempt: ' + str(i)
+                        mes = 'Communication with conductivity probe, attempt: ' + str(i)
                         print(mes)
                         client.close()
                         if i == 99:
@@ -138,7 +138,7 @@ while True:
 
                     except Exception as e:
                         print(str(e))
-                        mes = 'Comunication with pH probe, attempt: ' + str(i)
+                        mes = 'uncommentmunication with pH probe, attempt: ' + str(i)
                         print(mes)
                         client.close()
                         if i == 99:
