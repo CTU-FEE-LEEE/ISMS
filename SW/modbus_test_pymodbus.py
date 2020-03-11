@@ -16,8 +16,6 @@ for i in range(0,100):
     try:
         UNIT = 0x1E
         rq = client.write_register(address = 0x01, value = 0x1F, unit = UNIT)
-        print(rq)
-
         time.sleep(0.5)
 
         result = client.read_holding_registers(address = 0x53, count = 2, unit = UNIT)
