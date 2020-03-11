@@ -13,11 +13,11 @@ instrument.serial.timeout  = 0.5   # seconds
 instrument.address = 0x1E    # this is the slave address number
 instrument.mode = minimalmodbus.MODE_RTU   # rtu or ascii mode
 
-while True:
+for i in range(0,100):
     try:
         instrument.write_register(0x01, 0x1F, 0) # Registernumber, value, number of decimals for storage
 
-        time.sleep(0.5)
+        time.sleep(0.2)
 
         ## Read temperature (PV = ProcessValue) ##
         temperature = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals
@@ -30,10 +30,11 @@ while True:
         print tds_kcl
 
         print("")
-        time.sleep(2)
+        break
 
     except Exception as e:
-        print(e)
+        print(str(e))
+        time.sleep(0.5)
 
 
 ## Change temperature setpoint (SP) ##
