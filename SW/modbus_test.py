@@ -17,7 +17,7 @@ for i in range(0,100):
     try:
         instrument.write_register(0x01, 0x1F, 0) # Registernumber, value, number of decimals for storage
 
-        time.sleep(0.2)
+        time.sleep(0.5)
 
         ## Read temperature (PV = ProcessValue) ##
         temperature = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals
@@ -34,6 +34,13 @@ for i in range(0,100):
 
     except Exception as e:
         print(str(e))
+        if i == 99:
+            print("Cannot read from conductivity probe")
+            temperature = 0
+            conductivity = 0
+            salinity = 0
+            tds_kcl = 0
+            break
         time.sleep(0.5)
 
 
