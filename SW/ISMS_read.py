@@ -8,8 +8,8 @@ import time
 import datetime
 import sys
 import os
-import minimalmodbus
-minimalmodbus.CLOSE_PORT_AFTER_EACH_CALL = True
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+import struct
 
 from pymlab import config
 from mlabutils import ejson
@@ -18,16 +18,14 @@ parser = ejson.Parser()
 
 #### Functions ###############################################
 def modBusInit():
-    instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1) # port name, slave address (in decimal)
+    client = ModbusClient(method='rtu', port='/dev/ttyUSB0', baudrate=9600, stopbits = 2, bytesize = 8, parity = 'N', timeout = 0.5)
+    client.connect()
+    return client
 
-    instrument.serial.port          # this is the serial port name
-    instrument.serial.baudrate = 9600   # Baud
-    instrument.serial.bytesize = 8
-    instrument.serial.stopbits = 2
-    instrument.serial.timeout  = 0.5   # seconds
-
-    instrument.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
-    return instrument
+def reg2val(result):
+    packed_string = struct.pack("HH", *(result.registers[1],result.registers[0]))
+    value = struct.unpack("f", packed_string)[0]
+    return value
 
 #### Script Arguments ###############################################
 
@@ -43,8 +41,6 @@ value = parser.parse_file(sys.argv[2])
 path = value['data_path']
 interval = value['raw_sample_interval']
 stationName = value['origin']
-
-
 
 if (interval<5) or (interval>3600):
     sys.stderr.write("Invalid sample interval arguments.\n")
@@ -77,24 +73,16 @@ sensor1 = cfg.get_device("current_sensor1")
 
 while True:
     try:
-        # modbus
-        instrument = modBusInit()
         before = time.time()-interval
         while True:
-            
-            filename = path + time.strftime("%Y%m%d%H", time.gmtime()) +"0000_"+ stationName + "_data.csv"        
+
+            filename = path + time.strftime("%Y%m%d%H", time.gmtime()) +"0000_"+ stationName + "_data.csv"
             now = time.time()
-            
+
             if (now - before >= interval - 2.5):     #   0.5*5 channels= 2.5s
                 ##Measuremment settings
                 sensor1.setADC(channel = 1, gain = 1, sample_rate = 3.75);
-                
-                instrument.address = 0x1E    # this is the slave address number (1E-conductivity)
-                instrument.write_register(0x01, 0x1F, 0) # Registernumber, value, number of decimals for storage
-                
-                instrument.address = 0x14    # this is the slave address number (14 - pH)
-                instrument.write_register(0x01, 0x1F, 0) # Registernumber, value, number of decimals for storage
-                                
+
                 time.sleep(0.5)
 
                 ##Reading
@@ -103,33 +91,83 @@ while True:
                 channel1 = (0.2488*channel1-0.8892) + 185.522; # transformation from mA to meters and add current altitude of sensor in meters
 
                 ## Read data from conductivity sensor ##
-                instrument.address = 0x1E    # this is the slave address number (1E-conductivity)
+                for i in range(0,100):
+                    try:
+                        client = modBusInit()
+                        UNIT = 0x1E # sensor address
+                        rq = client.write_register(address = 0x01, value = 0x1F, unit = UNIT) # measure data
+                        time.sleep(0.5)
+                        # read data:
+                        temperature = reg2val(client.read_holding_registers(address = 0x53, count = 2, unit = UNIT))
+                        conductivity = reg2val(client.read_holding_registers(address = 0x55, count = 2, unit = UNIT))
+                        salinity = reg2val(client.read_holding_registers(address = 0x57, count = 2, unit = UNIT))
+                        tds_kcl = reg2val(client.read_holding_registers(address = 0x59, count = 2, unit = UNIT))
 
-                temperature1 = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals                
-                conductivity = instrument.read_float(0x55, 3, 2) # Registernumber, number of decimals                
-                salinity = instrument.read_float(0x57, 3, 2) # Registernumber, number of decimals                
-                tds_kcl = instrument.read_float(0x59, 3, 2) # Registernumber, number of decimals                
-                
+                        client.close()
+                        break
+
+                    except Exception as e:
+                        print(str(e))
+                        print(str(i))
+                        client.close()
+                        if i == 99:
+                            print("Cannot read from conductivity probe")
+                            temperature = 0
+                            conductivity = 0
+                            salinity = 0
+                            tds_kcl = 0
+                            break
+                        time.sleep(2)
+
+                time.sleep(0.5)
                 ## Read data from pH sensor ##
+                for i in range(0,100):
+                    try:
+                        client = modBusInit()
+                        UNIT = 0x14 # sensor address
+                        rq = client.write_register(address = 0x01, value = 0x1F, unit = UNIT) # measure data
+                        time.sleep(0.5)
+                        # read data:
+                        temperature2 = reg2val(client.read_holding_registers(address = 0x53, count = 2, unit = UNIT))
+                        pH = reg2val(client.read_holding_registers(address = 0x55, count = 2, unit = UNIT))
+                        redox = reg2val(client.read_holding_registers(address = 0x57, count = 2, unit = UNIT))
+
+                        client.close()
+                        break
+
+                    except Exception as e:
+                        print(str(e))
+                        print(str(i))
+                        client.close()
+                        if i == 99:
+                            print("Cannot read from pH probe")
+                            temperature2 = 0
+                            pH = 0
+                            redox = 0
+                            break
+                        time.sleep(2)
+
+                time.sleep(0.5)
+
                 instrument.address = 0x14    # this is the slave address number (14 - pH)
-                
-                temperature2 = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals                
-                pH = instrument.read_float(0x55, 3, 2) # Registernumber, number of decimals                
+
+                temperature2 = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals
+                pH = instrument.read_float(0x55, 3, 2) # Registernumber, number of decimals
                 redox = instrument.read_float(0x57, 3, 2) # Registernumber, number of decimals
 
-                ## Read data from analog sensor ##                
+                ## Read data from analog sensor ##
                 sensor1.setADC(channel = 2, gain = 1, sample_rate = 3.75);
                 time.sleep(0.5)
                 channel2 = sensor1.readCurrent();
                 if channel2 < 3:
                     channel2 = -1
-                    
+
                 if channel2 >= 3 and channel2 <= 4:
                     channel2 = 0
-                    
+
                 if channel2 > 4:
                     channel2 = (6.25*channel2-25); # transformation from mA to % of H concentration
-                
+
                 with open(filename, "a") as f:
                     sys.stdout.write("%s \t %0.3f \t  %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t %0.3f \t \n" % (datetime.datetime.now().isoformat(), channel1, temperature1, conductivity, salinity, tds_kcl, temperature2, pH, redox, channel2))
 
@@ -139,7 +177,7 @@ while True:
                     os.fsync(f.fileno())
                     before = time.time()
                 f.close()
-                
+
             else:
                 time.sleep(0.1)
 
@@ -149,5 +187,3 @@ while True:
     except Exception as e:
         print(e)
         time.sleep(10)
-
-
