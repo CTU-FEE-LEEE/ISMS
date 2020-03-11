@@ -91,7 +91,7 @@ while True:
                 channel1 = (0.2488*channel1-0.8892) + 185.522; # transformation from mA to meters and add current altitude of sensor in meters
 
                 ## Read data from conductivity sensor ##
-                for i in range(0,100):
+                for i in range(0,20):
                     try:
                         client = modBusInit()
                         UNIT = 0x1E # sensor address
@@ -117,11 +117,11 @@ while True:
                             salinity = 0
                             tds_kcl = 0
                             break
-                        time.sleep(2)
+                        time.sleep(0.5)
 
                 time.sleep(0.5)
                 ## Read data from pH sensor ##
-                for i in range(0,100):
+                for i in range(0,30):
                     try:
                         client = modBusInit()
                         UNIT = 0x14 # sensor address
@@ -145,7 +145,7 @@ while True:
                             pH = 0
                             redox = 0
                             break
-                        time.sleep(2)
+                        time.sleep(0.5)
 
                 time.sleep(0.5)
 
