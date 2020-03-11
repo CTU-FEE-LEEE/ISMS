@@ -43,7 +43,7 @@ for i in range(0,100):
             salinity = 0
             tds_kcl = 0
             break
-        time.sleep(0.5)
+        time.sleep(2)
 
 
 ## Change temperature setpoint (SP) ##
