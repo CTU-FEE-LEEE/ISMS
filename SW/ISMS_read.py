@@ -91,7 +91,7 @@ while True:
                 channel1 = (0.2488*channel1-0.8892) + 185.522; # transformation from mA to meters and add current altitude of sensor in meters
 
                 ## Read data from conductivity sensor ##
-                for i in range(0,20):
+                for i in range(0,100):
                     try:
                         client = modBusInit()
                         UNIT = 0x1E # sensor address
@@ -121,7 +121,7 @@ while True:
 
                 time.sleep(0.5)
                 ## Read data from pH sensor ##
-                for i in range(0,30):
+                for i in range(0,100):
                     try:
                         client = modBusInit()
                         UNIT = 0x14 # sensor address
@@ -148,12 +148,6 @@ while True:
                         time.sleep(0.5)
 
                 time.sleep(0.5)
-
-                instrument.address = 0x14    # this is the slave address number (14 - pH)
-
-                temperature2 = instrument.read_float(0x53, 3, 2) # Registernumber, number of decimals
-                pH = instrument.read_float(0x55, 3, 2) # Registernumber, number of decimals
-                redox = instrument.read_float(0x57, 3, 2) # Registernumber, number of decimals
 
                 ## Read data from analog sensor ##
                 sensor1.setADC(channel = 2, gain = 1, sample_rate = 3.75);
