@@ -173,7 +173,7 @@ def getData():
                     ts = int(val)
                     string = string + dataSensors[idx][0] + ': ' + datetime.utcfromtimestamp(ts).strftime('%Y.%m.%d %H:%M:%S') + '\n'
                 else:
-                    string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n
+                    string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
 
             print string
         else:
