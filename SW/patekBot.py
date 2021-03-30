@@ -168,7 +168,13 @@ def getData():
             string = ''
 
             for idx, val in enumerate(dataList):
-                string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
+                if idx == 0:
+                    string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
+                    ts = int(val)
+                    string = string + dataSensors[idx][0] + ': ' + datetime.utcfromtimestamp(ts).strftime('%Y.%m.%d %H:%M:%S') + '\n'
+                else:
+                    string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n
+
             print string
         else:
             string = "No files"
