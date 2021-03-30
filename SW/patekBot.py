@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import time, datetime
+import time
+from datetime import datetime
 import telepot
 import sys
 import os
@@ -35,7 +36,7 @@ meteoSensors = [ ['Time','unix t.s.'],
             ['Dew point','C'],
             ['Apparent temperature','C'],
                                                 ]
-                                                
+
 dataSensors = [ ['Time','unix t.s.'],
             ['Level meter','m a.s.l.'],
             ['Temperature1','C'],
@@ -62,47 +63,47 @@ def getMeteoFile():
         listOfMeteoFiles = list() #empty list
 
         files = sorted(os.listdir(dataMeteo)) # list of all files and folders in directory
-        
+
         for idx, val in enumerate(files): #goes through files
-            if val.endswith("meteo.csv"): # in case of meteo.csv        
+            if val.endswith("meteo.csv"): # in case of meteo.csv
                 listOfMeteoFiles.append(val) #add file to listOfFiles
-        
+
         if len(listOfMeteoFiles)>0:
             fileName = dataMeteo + listOfMeteoFiles[-1]
 
         else:
             fileName = "Cannot reach a file"
-                
+
 
     except Exception as e:
         string = "Error: " + str(e)
         print string
         fileName = "Cannot reach a file"
-        
+
     return fileName
-    
+
 def getDataFile():
     try:
         listOfMeteoFiles = list() #empty list
 
         files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
-        
+
         for idx, val in enumerate(files): #goes through files
-            if val.endswith("data.csv"): # in case of meteo.csv        
+            if val.endswith("data.csv"): # in case of meteo.csv
                 listOfMeteoFiles.append(val) #add file to listOfFiles
-        
+
         if len(listOfMeteoFiles)>0:
             fileName = dataSource + listOfMeteoFiles[-1]
 
         else:
             fileName = "Cannot reach a file"
-                
+
 
     except Exception as e:
         string = "Error: " + str(e)
         print string
         fileName = "Cannot reach a file"
-        
+
     return fileName
 
 def getMeteo():
@@ -111,32 +112,37 @@ def getMeteo():
         listOfMeteoFiles = list() #empty list
 
         files = sorted(os.listdir(dataMeteo)) # list of all files and folders in directory
-        
+
         for idx, val in enumerate(files): #goes through files
-            if val.endswith("meteo.csv"): # in case of meteo.csv        
+            if val.endswith("meteo.csv"): # in case of meteo.csv
                 listOfMeteoFiles.append(val) #add file to listOfFiles
-        
-        if len(listOfMeteoFiles)>0:            
+
+        if len(listOfMeteoFiles)>0:
             with open(dataMeteo + listOfMeteoFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
                 text = text[:-1]
-            original.close()            
-            
+            original.close()
+
             dataList = text.split(';')
-            
+
             string = ''
-            
+
             for idx, val in enumerate(dataList):
-                string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'            
+                if idx == 0:
+                    string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'
+                    ts = int(val)
+                    string = string + meteoSensors[idx][0] + ': ' + datetime.utcfromtimestamp(ts).strftime('%Y.%m.%d %H:%M:%S') + '\n'
+                else:
+                    string = string + meteoSensors[idx][0] + ': ' + val + ' ' + meteoSensors[idx][1] + '\n'
             print string
         else:
             string = "No files"
-                
+
 
     except Exception as e:
         string = "Error: " + str(e)
-        
+
     return string
 
 def getData():
@@ -144,48 +150,48 @@ def getData():
 
         listOfDataFiles = list() #empty list
 
-        files = sorted(os.listdir(dataSource)) # list of all files and folders in directory        
+        files = sorted(os.listdir(dataSource)) # list of all files and folders in directory
 
         for idx, val in enumerate(files): #goes through files
-            if val.endswith("data.csv"): # in case of meteo.csv        
-                listOfDataFiles.append(val) #add file to listOfFiles      
+            if val.endswith("data.csv"): # in case of meteo.csv
+                listOfDataFiles.append(val) #add file to listOfFiles
 
-        if len(listOfDataFiles)>0:            
+        if len(listOfDataFiles)>0:
             with open(dataSource + listOfDataFiles[-1], 'r') as original: # open and read file
                 data = original.readlines()
                 text = data[-1]
                 text = text[:-1]
             original.close()
-            
+
             dataList = text.split(';')
-            
+
             string = ''
-            
+
             for idx, val in enumerate(dataList):
                 string = string + dataSensors[idx][0] + ': ' + val + ' ' + dataSensors[idx][1] + '\n'
             print string
         else:
             string = "No files"
-                
+
 
     except Exception as e:
         string = "Error: " + str(e)
-        
+
     return string
-    
+
 def rebootStatus():
     try:
         if os.path.exists('reboot.txt'): # check if file exists
             with open('reboot.txt', 'r') as file: # read file
                 f = file.read()
             file.close()
-            
+
             if f == 'OFF' or f == 'ON':
-                if f == 'OFF':       
-                    string = "Reboot status: OFF"        
-                else:     
+                if f == 'OFF':
+                    string = "Reboot status: OFF"
+                else:
                     string = "Reboot status: ON"
-                    
+
                 print string
             else:
                 with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
@@ -200,33 +206,33 @@ def rebootStatus():
                 f = 'OFF'
             file.close()
             string = "Missing reboot file\nFile added\nReboot status set to OFF"
-            print string                
+            print string
 
     except Exception as e:
         string = "Error: " + str(e)
-        
+
     return string
-    
+
 def reboot():
     try:
         if os.path.exists('reboot.txt'): # check if file exists
             with open('reboot.txt', 'r') as file: # read file
                 f = file.read()
             file.close()
-            
+
             if f == 'OFF' or f == 'ON':
                 if f == 'OFF':
-                    with open('reboot.txt', 'r+') as file: # open, read and write            
+                    with open('reboot.txt', 'r+') as file: # open, read and write
                         file.truncate(0)
                         file.write('ON')
-                    file.close()        
-                    string = "OFF was changed to ON\nWaiting for reboot..."        
+                    file.close()
+                    string = "OFF was changed to ON\nWaiting for reboot..."
                 else:
-                    with open('reboot.txt', 'r+') as file: # open, read and write            
+                    with open('reboot.txt', 'r+') as file: # open, read and write
                         file.truncate(0)
                         file.write('OFF')
-                    file.close()        
-                    string = "ON was changed to OFF\nRebooting stopped"                
+                    file.close()
+                    string = "ON was changed to OFF\nRebooting stopped"
             else:
                 with open('reboot.txt', 'r+') as file: # if there is not OFF or ON
                     file.truncate(0)
@@ -241,11 +247,11 @@ def reboot():
             file.close()
             string = "Missing reboot file\nFile added\nReboot status set to OFF"
             print string
-                
+
 
     except Exception as e:
         string = "Error: " + str(e)
-        
+
     return string
 
 def action(msg):
@@ -276,8 +282,8 @@ def action(msg):
             telegram_bot.sendMessage(chat_id, fileName)
         else:
             telegram_bot.sendDocument(chat_id, document=open(fileName))
-        
-        
+
+
 # telegram_bot.sendPhoto (chat_id, photo = "https://i.pinimg.com/avatars/circuitdigest_1464122100_280.jpg")
 # telegram_bot.sendDocument(chat_id, document=open('/home/pi/Aisha.py'))
 # telegram_bot.sendAudio(chat_id, audio=open('/home/pi/test.mp3'))
