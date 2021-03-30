@@ -3,7 +3,7 @@
 # sudo modprobe bcm_wdt - raspberry
 # http://raspberrypi.werquin.com/post/44890705367/a-hardware-watchdog-to-monitor-a-deamon-running
 
-# 
+#
 import thread
 import time
 import os
@@ -45,15 +45,15 @@ def hwwd():
         #print "WD on, left:",wd.get_time_left()
         wd.keep_alive()
         time.sleep(g_HWWDSleep)
-    # HWWD Off    
+    # HWWD Off
     wd.magic_close()
     print "HW-WD off"
 
-def conTest(hostname = "google.com"):    
+def conTest(hostname = "google.com"):
     """
     Connection test - ping to server
     google.com by default
-    """       
+    """
     response = os.system("ping -c 1 -w 4 " + hostname + " > /dev/null 2>&1")
     return response
 
@@ -74,17 +74,17 @@ def getMemUsage():
     """
     info = psutil.virtual_memory()
     return info.percent
-    
+
 def prcsRunning(process = "default"):
     """
     Checks if the process is running
-    """    
+    """
     if os.system("ps -A | grep " + process) == 0:
         return True
     else:
         return False
-        
-    
+
+
 
 def writeLog(report):
     """
@@ -99,7 +99,7 @@ def writeLog(report):
     except Exception as e:
         print("Cannot write to log file (WD_log.txt)")
 	print(str(e))
-    
+
 def reboot(msg = "default"):
     """
     Soft reboot of the system
@@ -107,7 +107,7 @@ def reboot(msg = "default"):
     # stop WH WD
     g_interrupt = 1
     # wait for HWWD process
-    time.sleep(g_HWWDSleep+1)    
+    time.sleep(g_HWWDSleep+1)
 
     writeLog("Rebooting: " + msg)
     os.system('reboot')
@@ -130,10 +130,10 @@ def main():
     # Handler for key interrupt
     def handler(signum, frame):
         global g_interrupt
-        g_interrupt = 1        
-        
+        g_interrupt = 1
+
     try:
-        thread.start_new_thread(hwwd,())        
+        thread.start_new_thread(hwwd,())
     except:
         print "Error: unable to start thread"
         wd.magic_close()
@@ -143,11 +143,11 @@ def main():
     print ("Waiting 10 min for all processes")
     print("Do not terminate now!")
     time.sleep(600)
-         
+
     signal.signal(signal.SIGINT, handler)
 
 
-    while g_interrupt == 0:        
+    while g_interrupt == 0:
         print("Testing...")
         ## connection test
         if conTest("85.207.12.165") == 0: # chemkomex address
@@ -180,19 +180,19 @@ def main():
 
         ## Memory usage test
         if getMemUsage() < 95:
-            print "Memory usage test: PASS"            
-        else:            
+            print "Memory usage test: PASS"
+        else:
             msg = "Memory usage test: FAIL. Memory usage:" + str(getMemUsage()) + "%"
             print msg
             reboot("Memory usage test error - " + str(getMemUsage()) + "% used")
-            
-        ## Reboot request test   
+
+        ## Reboot request test
         try:
             if os.path.exists('/home/odroid/repos/ISMS01A/SW/reboot.txt'): # check if file exists
                 with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r') as file: # read file
                     f = file.read()
                 file.close()
-                
+
                 if f == 'OFF' or f == 'ON':
                     if f == 'ON':
                         with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r+') as file: # switch to off
@@ -203,7 +203,7 @@ def main():
                         print msg
                         reboot(msg)
                     else:
-                        msg = "Reboot request test: PASS"                
+                        msg = "Reboot request test: PASS"
                 else:
                     with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'r+') as file: # if there is not OFF or ON
                         file.truncate(0)
@@ -214,7 +214,7 @@ def main():
                 print msg
             else:
                 with open('/home/odroid/repos/ISMS01A/SW/reboot.txt', 'w') as file: # write OFF
-                    file.write('OFF')                    
+                    file.write('OFF')
                 file.close()
                 os.chmod("/home/odroid/repos/ISMS01A/SW/reboot.txt", 0o777)
                 msg = "Reboot request test: Missing reboot file - file added"
@@ -224,44 +224,44 @@ def main():
             msg = "Error: " + str(e)
             print msg
             writeLog(str(msg))
-            
+
         ## Running process tests
         processFlag = 0
         process = "ISMS"
         if prcsRunning(process):
-            print "Running process \"" + process + "\" test: PASS"                         
-        else:            
+            print "Running process \"" + process + "\" test: PASS"
+        else:
             processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
-            
+
         process = "average"
         if prcsRunning(process):
-            print "Running process \"" + process + "\" test: PASS"             
-        else:            
+            print "Running process \"" + process + "\" test: PASS"
+        else:
             processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
-            
+
         process = "dataUpload"
         if prcsRunning(process):
-            print "Running process \"" + process + "\" test: PASS"             
-        else:            
+            print "Running process \"" + process + "\" test: PASS"
+        else:
             processFlag = 1
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
-            
-        process = "button_monitor"
-        if prcsRunning(process):
-            print "Running process \"" + process + "\" test: PASS"             
-        else:            
-            processFlag = 1
-            msg = "Running process \"" + process + "\" test: FAIL"
-            writeLog(msg)
-            print msg
+
+        # process = "button_monitor"
+        # if prcsRunning(process):
+        #     print "Running process \"" + process + "\" test: PASS"
+        # else:
+        #     processFlag = 1
+        #     msg = "Running process \"" + process + "\" test: FAIL"
+        #     writeLog(msg)
+        #     print msg
 
         process = "meteo"
         if prcsRunning(process):
@@ -271,7 +271,7 @@ def main():
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
-            
+
         process = "patekBot"
         if prcsRunning(process):
             print "Running process \"" + process + "\" test: PASS"
@@ -280,23 +280,23 @@ def main():
             msg = "Running process \"" + process + "\" test: FAIL"
             writeLog(msg)
             print msg
-            
+
         if processFlag == 1:
             errCntProcess += 1
         else:
             errCntProcess = 0
-            
+
         if errCntProcess >= errCnt:
             reboot("Running process tests - exceed boundaries")
             break
 
-                
+
         print("Testing done")
-        
+
         #sleep section
-        print "--------------------------"        
+        print "--------------------------"
         for i in range(2*sleepTime):
-            if g_interrupt == 1:                
+            if g_interrupt == 1:
                 break
             time.sleep(0.5)
 
